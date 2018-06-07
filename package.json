@@ -1,0 +1,26 @@
+{
+  "name": "living-pixel-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "font-awesome": "^4.7.0",
+    "primereact": "^1.6.0-rc.1",
+    "react": "^16.4.0",
+    "react-css-grid": "^2.0.0-0",
+    "react-dom": "^16.4.0",
+    "react-dropzone": "^4.2.11",
+    "react-grid-layout": "^0.16.6",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.0",
+    "react-scripts": "1.1.4",
+    "react-transition-group": "^2.3.1",
+    "redux": "^4.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

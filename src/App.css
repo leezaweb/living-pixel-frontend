@@ -1,0 +1,108 @@
+.page-lab section > * {
+  border: 1px dashed black;
+  word-break: break-all;
+}
+
+.page-lab section:first-of-type > * {
+  resize: both;
+  overflow: auto;
+}
+.page-lab {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-gap: 36px;
+}
+
+.atoms,
+.molecules,
+.organisms {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  place-content: space-around;
+  grid-gap: 6px;
+}
+
+.ui-tabview-panel > div > div {
+  border-color: #d5d5d5;
+  border-style: solid;
+  border-width: 1px 1px 0 1px;
+  box-shadow: inset 0 0 2px 0 rgba(255, 255, 255, 0.4),
+    inset 0 0 3px 0 rgba(0, 0, 0, 0.4), inset 0 0 3px 5px rgba(0, 0, 0, 0.05),
+    2px 2px 4px 0 rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  position: relative;
+  padding: 18px 0;
+  text-align: center;
+}
+
+.ui-tabview-panel > div > div:before {
+  top: 0;
+  content: "";
+  display: block;
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  height: 3px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.6);
+}
+.ui-tabview-panel > div > div:after {
+  bottom: 0;
+  content: "";
+  display: block;
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  height: 3px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  background: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+header,
+footer {
+  border: 1px solid #ddd;
+  padding: 24px;
+}
+
+main {
+  width: 97% !important;
+}
+
+.page-lab .page {
+  border-color: #d5d5d5;
+  border-style: solid;
+  border-width: 0 1px 1px 1px !important;
+  padding: 3px;
+}
+.page-lab .art-board {
+  box-shadow: 0 0 #ccc, 2px -2px #fff, 3px -3px #ccc, 5px -5px #fff,
+    6px -6px #ccc, 8px -8px #fff, 9px -9px #ccc;
+  margin: 24px;
+  position: relative;
+}
+.ui-widget-header {
+  border-color: #d5d5d5;
+  border-style: solid;
+  border-width: 1px 1px 0 1px !important;
+}
+.ui-tabview.ui-tabview-top > .ui-tabview-nav li:not(.ui-state-active) {
+  border-color: #d5d5d5;
+  border-style: solid;
+  border-width: 0 0 1px 0 !important;
+}
+.ui-tabview .ui-tabview-panel {
+  border-color: #d5d5d5;
+  border-style: solid;
+  border-width: 0 1px 1px 1px !important;
+}
+html {
+  padding: 18px;
+}
+.page div:first-child {
+  text-align: center;
+}
