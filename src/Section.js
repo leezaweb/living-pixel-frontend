@@ -3,9 +3,9 @@ import Element from "./Element";
 
 class Section extends Component {
   render() {
-    let { section_property, elements } = this.props.section;
+    let { section_style, elements } = this.props.section;
     let style = {};
-    for (const [key, value] of Object.entries(section_property)) {
+    for (const [key, value] of Object.entries(section_style)) {
       let camelKey = key
         .split("_")
         .map((w, i) => (i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)))

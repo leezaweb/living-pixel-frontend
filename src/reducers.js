@@ -1,16 +1,34 @@
 import { combineReducers } from "redux";
 
 const initialState = {
+  loading: true,
   sites: [],
   elements: [],
+  users: [],
   activeElement: null,
-  loggedInSite: null
+  activeSite: {},
+  activeUser: null
 };
 
 const sitesReducer = (state = initialState.sites, action) => {
   switch (action.type) {
-    case "FETCH_SITES":
+    case "UPDATE_SITES":
+      return action.sites;
+    default:
       return state;
+  }
+};
+
+const loadingReducer = (state = initialState.loading, action) => {
+  switch (action.type) {
+    case "FETCH_SITES":
+      return true;
+    case "UPDATE_SITES":
+      return false;
+    case "SHOW_SITE":
+      return true;
+    case "UPDATE_SITE":
+      return false;
     default:
       return state;
   }
@@ -28,29 +46,28 @@ const elementsReducer = (state = initialState.elements, action) => {
 const activeElementReducer = (state = initialState.activeElement, action) => {
   switch (action.type) {
     case "SELECT_ELEMENT":
-      return state;
+      // document
+      // .querySelector(".ui-state-active")
+      // .classList.remove(".ui-state-active");
+      return action.element;
     case "ADD_ELEMENT":
       return state;
     case "DELETE_ELEMENT":
       return state;
     case "UPDATE_ELEMENT":
-      return state;
-    case "UPDATE_PROPERTY":
-      return state;
+      return action.element;
     default:
       return state;
   }
 };
 
-const loggedInSiteReducer = (state = initialState.loggedInSite, action) => {
+const activeSiteReducer = (state = initialState.activeSite, action) => {
   switch (action.type) {
-    case "LOG_INTO_SITE":
-      return state;
+    case "UPDATE_SITE":
+      return action.site;
     case "CREATE_SITE":
       return state;
     case "DELETE_SITE":
-      return state;
-    case "UPDATE_SITE_INFO":
       return state;
     default:
       return state;
@@ -58,10 +75,11 @@ const loggedInSiteReducer = (state = initialState.loggedInSite, action) => {
 };
 
 const rootReducer = combineReducers({
+  loading: loadingReducer,
   sites: sitesReducer,
   elements: elementsReducer,
   activeElement: activeElementReducer,
-  loggedInSite: loggedInSiteReducer
+  activeSite: activeSiteReducer
 });
 
 export default rootReducer;

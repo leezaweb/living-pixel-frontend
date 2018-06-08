@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import Section from "./Section";
 import GridLayout from "react-grid-layout";
+import * as actions from "./actions";
+import { connect } from "react-redux";
 
 class Main extends Component {
   render() {
@@ -8,7 +9,7 @@ class Main extends Component {
 
     return (
       <main key="main">
-        <section
+        {/*<section
           className="section"
           style={{
             display: "grid",
@@ -17,15 +18,13 @@ class Main extends Component {
             placeContent: "space-around"
           }}
           dangerouslySetInnerHTML={{ __html: figures.join("") }}
-        />
+        />*/}
 
         {this.props.sections
           .sort((a, b) => a.sequence - b.sequence)
           .map((section, sectionIndex) => {
             let sectionStyle = {};
-            for (const [key, value] of Object.entries(
-              section.section_property
-            )) {
+            for (const [key, value] of Object.entries(section.section_style)) {
               let camelKey = key
                 .split("_")
                 .map(
@@ -47,7 +46,11 @@ class Main extends Component {
             });
 
             return (
-              <section style={sectionStyle}>
+              <section
+                style={sectionStyle}
+                onClick={event => this.props.onClick(event, section)}
+                key={section.id}
+              >
                 <GridLayout
                   layout={layout}
                   cols={12}
@@ -57,7 +60,7 @@ class Main extends Component {
                   {section.elements.map(element => {
                     let elementStyle = {};
                     for (const [key, value] of Object.entries(
-                      element.element_property
+                      element.element_style
                     )) {
                       let camelKey = key
                         .split("_")
@@ -71,10 +74,20 @@ class Main extends Component {
 
                     return element.tag === "img" ? (
                       <div key={element.id.toString()}>
-                        <img style={elementStyle} src={element.src} alt="" />
+                        <img
+                          key={element.id.toString()}
+                          style={elementStyle}
+                          src={element.src}
+                          alt=""
+                          onClick={event => this.props.onClick(event, element)}
+                        />
                       </div>
                     ) : (
-                      <p style={elementStyle} key={element.id.toString()}>
+                      <p
+                        style={elementStyle}
+                        key={element.id.toString()}
+                        onClick={event => this.props.onClick(event, element)}
+                      >
                         {element.inner_text}
                       </p>
                     );
@@ -88,4 +101,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default connect(null, actions)(Main);

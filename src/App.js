@@ -8,6 +8,8 @@ import "font-awesome/css/font-awesome.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+import { connect } from "react-redux";
+import * as actions from "./actions";
 
 class App extends Component {
   render() {
@@ -26,4 +28,9 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  sites: state.sites,
+  users: state.users
+});
+
+export default connect(mapStateToProps, actions)(App);

@@ -11,9 +11,9 @@ class PageCast extends Component {
       title: "",
       team: [],
       sections: [],
-      body: { body_property: {} },
-      header: { inner_text: "", header_property: {} },
-      footer: { inner_text: "", footer_property: {} }
+      body: { body_style: {} },
+      header: { inner_text: "", header_style: {} },
+      footer: { inner_text: "", footer_style: {} }
     };
   }
   componentDidMount() {

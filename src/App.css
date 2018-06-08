@@ -1,3 +1,27 @@
+.ui-progress-spinner {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.ui-tabview.ui-widget-content {
+  position: sticky;
+  top: 12px;
+}
+
+.ui-tabview .ui-tabview-nav {
+  display: grid !important;
+  grid-gap: 1px;
+  grid-template-columns: repeat(auto-fit, minmax(0px, 1fr));
+}
+
+.ui-helper-clearfix:before,
+.ui-helper-clearfix:after {
+  display: none !important;
+}
+
+.ui-tabview-nav.ui-widget-header.ui-corner-all {
+  border-radius: 0;
+}
 .page-lab section > * {
   border: 1px dashed black;
   word-break: break-all;
@@ -23,7 +47,11 @@
   grid-gap: 6px;
 }
 
-.ui-tabview-panel > div > div {
+.ui-tabview .ui-tabview-panel {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.ui-tabview-panel > .tile > div {
   border-color: #d5d5d5;
   border-style: solid;
   border-width: 1px 1px 0 1px;
@@ -36,7 +64,7 @@
   text-align: center;
 }
 
-.ui-tabview-panel > div > div:before {
+.ui-tabview-panel > .tile > div:before {
   top: 0;
   content: "";
   display: block;
@@ -49,7 +77,7 @@
   background: rgba(255, 255, 255, 0.6);
   box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.6);
 }
-.ui-tabview-panel > div > div:after {
+.ui-tabview-panel > .tile > div:after {
   bottom: 0;
   content: "";
   display: block;

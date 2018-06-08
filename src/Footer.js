@@ -2,9 +2,9 @@ import React, { Component } from "react";
 
 class Footer extends Component {
   render() {
-    let { footer_property, inner_text } = this.props.footer;
+    let { footer_style, inner_text } = this.props.footer;
     let style = {};
-    for (const [key, value] of Object.entries(footer_property)) {
+    for (const [key, value] of Object.entries(footer_style)) {
       let camelKey = key
         .split("_")
         .map((w, i) => (i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)))
@@ -12,7 +12,7 @@ class Footer extends Component {
       style[camelKey] = value;
     }
     return (
-      <footer style={style}>
+      <footer style={style} onClick={this.props.onClick}>
         <h5>{inner_text}</h5>
       </footer>
     );
