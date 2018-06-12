@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Header from "./Header";
-import Main from "./Main";
+import MainEdit from "./MainEdit";
+import MainReArrange from "./MainReArrange";
 import Footer from "./Footer";
 import * as actions from "./actions";
 import { connect } from "react-redux";
@@ -25,9 +26,19 @@ class Body extends Component {
             this.props.selectElement(this.props.header);
           }}
         />
-        <Main
-          sections={this.props.sections}
+        <MainReArrange
+          onMouseDown={(event, element) => {
+            event.stopPropagation();
+            this.props.selectElement(element);
+          }}
           onClick={(event, element) => {
+            event.stopPropagation();
+            this.props.selectElement(element);
+          }}
+        />
+        <MainEdit
+          sections={this.props.sections}
+          onMouseDown={(event, element) => {
             event.stopPropagation();
             this.props.selectElement(element);
           }}

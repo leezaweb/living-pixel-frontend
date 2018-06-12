@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 
 const initialState = {
+  thing: "thing",
   loading: true,
   sites: [],
   elements: [],
@@ -46,9 +47,6 @@ const elementsReducer = (state = initialState.elements, action) => {
 const activeElementReducer = (state = initialState.activeElement, action) => {
   switch (action.type) {
     case "SELECT_ELEMENT":
-      // document
-      // .querySelector(".ui-state-active")
-      // .classList.remove(".ui-state-active");
       return action.element;
     case "ADD_ELEMENT":
       return state;
@@ -69,12 +67,34 @@ const activeSiteReducer = (state = initialState.activeSite, action) => {
       return state;
     case "DELETE_SITE":
       return state;
+    case "UPDATE_ELEMENT":
+      let as = state;
+      state.sections.forEach((s, x) => {
+        s.elements.forEach((e, y) => {
+          if (e.id === action.element.id) {
+            as.sections[x].elements[y].element_style =
+              action.element.element_style;
+          }
+        });
+      });
+
+      return as;
+    default:
+      return state;
+  }
+};
+
+const thingReducer = (state = initialState.thing, action) => {
+  switch (action.type) {
+    case "UPDATE_THING":
+      return action.value;
     default:
       return state;
   }
 };
 
 const rootReducer = combineReducers({
+  thing: thingReducer,
   loading: loadingReducer,
   sites: sitesReducer,
   elements: elementsReducer,

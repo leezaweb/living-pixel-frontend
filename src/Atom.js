@@ -2,7 +2,11 @@ import React, { Component } from "react";
 
 class Atom extends Component {
   render() {
-    return <div>Atom</div>;
+    return (
+      <div>
+        <i className="fa fa-object-ungroup" />Atom
+      </div>
+    );
   }
 }
 

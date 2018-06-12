@@ -5,8 +5,8 @@ class Menu extends Component {
   render() {
     var items = [
       {
-        label: "File",
-        icon: "fa-file-o",
+        label: "Edit",
+        icon: "fa-edit",
         items: [
           {
             label: "New",
@@ -15,13 +15,7 @@ class Menu extends Component {
           },
           { label: "Open" },
           { separator: true },
-          { label: "Quit" }
-        ]
-      },
-      {
-        label: "Edit",
-        icon: "fa-edit",
-        items: [
+          { label: "Quit" },
           { label: "Undo", icon: "fa-mail-forward" },
           { label: "Redo", icon: "fa-mail-reply" }
         ]
@@ -53,7 +47,7 @@ class Menu extends Component {
         ]
       },
       {
-        label: "Actions",
+        label: "Account",
         icon: "fa-gear",
         items: [
           {
@@ -68,12 +62,12 @@ class Menu extends Component {
             label: "Other",
             icon: "fa-phone",
             items: [{ label: "Delete", icon: "fa-minus" }]
+          },
+          {
+            label: "Quit",
+            icon: "fa-minus"
           }
         ]
-      },
-      {
-        label: "Quit",
-        icon: "fa-minus"
       }
     ];
 

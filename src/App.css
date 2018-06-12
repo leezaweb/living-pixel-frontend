@@ -1,3 +1,66 @@
+.styleForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 12px;
+}
+.styleForm input[type="number"] {
+  font-size: 1.8em !important;
+}
+.styleForm input[type="text"] {
+  font-size: 1.8em !important;
+}
+select,
+select:focus {
+  height: 3.6em;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  width: 100%;
+  border: none;
+  /* transform: scaleX(-1); */
+  outline: none;
+}
+select:not(.selectColor) {
+  padding-top: 6px;
+}
+select.selectColor {
+  padding-top: 9px;
+}
+
+.selectColor {
+  background-color: transparent;
+}
+
+.selectBorder {
+  /* background-color: #d4d4d4; */
+}
+label {
+  display: block;
+  font-variant: small-caps;
+  color: #444;
+}
+.page-lab option,
+section > * > * {
+  cursor: pointer;
+}
+.selectColor option {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  margin: 0 3px;
+  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  border-radius: 240em;
+}
+option {
+  /* transform: scaleX(-1); */
+}
+select:not(.selectColor) option {
+  min-width: 2em;
+  min-height: 2em;
+  display: inline-block;
+  margin: 0 6px;
+}
+
 .ui-progress-spinner {
   width: 100% !important;
   height: 100% !important;
@@ -28,8 +91,8 @@
 }
 
 .page-lab section:first-of-type > * {
-  resize: both;
-  overflow: auto;
+  /* resize: both;
+  overflow: auto; */
 }
 .page-lab {
   display: grid;
@@ -48,8 +111,8 @@
 }
 
 .ui-tabview .ui-tabview-panel {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  /* padding-left: 0 !important;
+  padding-right: 0 !important; */
 }
 .ui-tabview-panel > .tile > div {
   border-color: #d5d5d5;
@@ -98,7 +161,7 @@ footer {
 }
 
 main {
-  width: 97% !important;
+  /* width: 97% !important; */
 }
 
 .page-lab .page {
@@ -112,6 +175,10 @@ main {
     6px -6px #ccc, 8px -8px #fff, 9px -9px #ccc;
   margin: 24px;
   position: relative;
+}
+
+.art-board > * > * > * {
+  padding: 12px;
 }
 .ui-widget-header {
   border-color: #d5d5d5;

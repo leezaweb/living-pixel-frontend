@@ -4,7 +4,9 @@
   "private": true,
   "dependencies": {
     "classnames": "^2.2.5",
+    "draft-js": "^0.10.5",
     "font-awesome": "^4.7.0",
+    "lodash": "^4.17.10",
     "primereact": "^1.6.0-rc.1",
     "react": "^16.4.0",
     "react-css-grid": "^2.0.0-0",

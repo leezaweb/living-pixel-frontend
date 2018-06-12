@@ -24,6 +24,7 @@ const siteFetcher = dispatch => {
 };
 
 const sitesFetcher = dispatch => {
+  console.log("updating");
   fetch(SITE_URL)
     .then(resp => resp.json())
     .then(json => {
@@ -43,6 +44,7 @@ const sitesFetcher = dispatch => {
 };
 
 export function updateSites(sites) {
+  console.log("updating");
   return { type: "UPDATE_SITES", sites };
 }
 
@@ -87,11 +89,70 @@ export function addElement() {
   };
 }
 
-export function updateElement() {
-  return {
-    type: "UPDATE_ELEMENT"
+// export function updateElement() {
+//   return {
+//     type: "UPDATE_ELEMENT"
+//   };
+// }
+
+export const updateElement = object => {
+  // debugger;
+
+  const thunk = dispatch => {
+    elementUpdator(dispatch, object);
   };
-}
+
+  return thunk;
+};
+
+const elementUpdator = (dispatch, object) => {
+  let id = object.element[object.key].id;
+
+  const ELEMENT_STYLE_URL = `http://localhost:3000/api/v1/${object.key}s`;
+
+  let data =
+    "value" in object
+      ? {
+          id: object.element[object.key].id,
+          [object.name]: object.value
+        }
+      : {
+          grid_column_start: object.grid_column_start,
+          grid_column_end: object.grid_column_end,
+          grid_row_start: object.grid_row_start,
+          grid_row_end: object.grid_row_end
+        };
+
+  fetch(`${ELEMENT_STYLE_URL}/${id}`, {
+    body: JSON.stringify(data),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    method: "PATCH"
+  })
+    .then(resp => console.log(resp))
+    .then(
+      fetch(`${SITE_URL}/1`)
+        .then(resp => {
+          return resp.json();
+        })
+        .then(json => {
+          dispatch(
+            updateSite({
+              version: json.version,
+              url: json.url,
+              title: json.title,
+              team: json.teams,
+              sections: json.sections,
+              body: json.body,
+              header: json.header,
+              footer: json.footer
+            })
+          );
+        })
+    );
+};
 
 export function deleteElement() {
   return {

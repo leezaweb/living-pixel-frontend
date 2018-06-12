@@ -13,28 +13,34 @@ class TabContainer extends Component {
     const molecules = Array(36).fill(<Molecule />);
     const organisms = Array(36).fill(<Organism />);
 
-    let k;
+    let key;
     if (this.props.activeElement) {
-      k = Object.keys(this.props.activeElement).find(k => k.includes("_style"));
+      key = Object.keys(this.props.activeElement).find(key =>
+        key.includes("_style")
+      );
     }
 
     let propertyPanel = () => (
       <TabView>
         <TabPanel
-          header="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected Element Style&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+          header={
+            this.props.activeElement.tag
+              ? `Selected Element Style : ${this.props.activeElement.tag} tag`
+              : `Selected Element Style : ${key.replace("_style", "")} tag`
+          }
           leftIcon="fa-gear"
           style={{ width: "100%" }}
         >
-          <Style properties={this.props.activeElement[k]} />
+          <Style activeElement={this.props.activeElement} />
         </TabPanel>
       </TabView>
     );
 
     return (
       <TabView onTabChange={() => this.props.selectElement(null)}>
-        <TabPanel header="Atoms" leftIcon="fa-gear">
+        <TabPanel header="Organisms" leftIcon="fa-gear">
           {!this.props.activeElement ? (
-            <div className="atoms tile"> {atoms}</div>
+            <div className="atoms tile"> {organisms}</div>
           ) : (
             propertyPanel()
           )}
@@ -46,9 +52,10 @@ class TabContainer extends Component {
             propertyPanel()
           )}
         </TabPanel>
-        <TabPanel header="Organisms" leftIcon="fa-gear">
+
+        <TabPanel header="Atoms" leftIcon="fa-gear">
           {!this.props.activeElement ? (
-            <div className="atoms tile"> {organisms}</div>
+            <div className="atoms tile"> {atoms}</div>
           ) : (
             propertyPanel()
           )}

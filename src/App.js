@@ -10,6 +10,7 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import { connect } from "react-redux";
 import * as actions from "./actions";
+// import NewComponent from "./NewComponent";
 
 class App extends Component {
   render() {
@@ -34,3 +35,5 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, actions)(App);
+
+// {/*<div><NewComponent />  </div>*/}

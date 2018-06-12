@@ -2,52 +2,34 @@ import React, { Component } from "react";
 import GridLayout from "react-grid-layout";
 import * as actions from "./actions";
 import { connect } from "react-redux";
-import { Editor, EditorState, ContentState } from "draft-js";
 
 class Main extends Component {
-  constructor(props) {
-    super(props);
+  onLayoutChange = (layout, layouts) => {
+    if (
+      this.props.activeElement &&
+      "element_style" in this.props.activeElement
+    ) {
+      let item = layout.find(
+        item => item.i === this.props.activeElement.id.toString()
+      );
+      console.log(this.props.activeElement);
+      console.log("X", item.x);
 
-    let editorSections = this.props.sections.map(section => {
-      let elems = section.elements.map(element => {
-        if (element.inner_text) {
-          return {
-            ...element,
-            editorState: EditorState.createWithContent(
-              ContentState.createFromText(element.inner_text)
-            )
-          };
-        } else {
-          return element;
-        }
+      this.props.updateElement({
+        key: "element_style",
+        grid_column_start: item.x,
+        grid_column_end: item.x + item.w,
+        grid_row_start: item.y,
+        grid_row_end: item.y + item.h,
+        element: this.props.activeElement
       });
-
-      return { ...section, elements: elems };
-    });
-    console.log(editorSections);
-
-    this.state = {
-      editorSections: editorSections,
-      editorState: EditorState.createWithContent(
-        ContentState.createFromText("Hello")
-      )
-    };
-  }
-
-  onChange = editorState => {
-    this.setState({ editorState });
+    }
   };
 
   render() {
     const figures = Array(48).fill("<div>Section > Figure</div>");
-
     return (
       <main>
-        <Editor
-          editorState={this.state.editorState}
-          onChange={this.onChange}
-          placeholder="Asdasd"
-        />
         {/*<section
           className="section"
           style={{
@@ -59,7 +41,7 @@ class Main extends Component {
           dangerouslySetInnerHTML={{ __html: figures.join("") }}
         />*/}
 
-        {this.state.editorSections
+        {this.props.sections
           .sort((a, b) => a.sequence - b.sequence)
           .map((section, sectionIndex) => {
             let sectionStyle = {};
@@ -75,13 +57,16 @@ class Main extends Component {
             }
 
             var layout = section.elements.map((element, elementIndex) => {
-              console.log(element.id);
               return {
                 i: element.id.toString(),
-                x: elementIndex * 12 / section.elements.length,
-                y: sectionIndex * 2,
-                w: 12 / section.elements.length,
-                h: 1
+                x: element.element_style.grid_column_start,
+                y: element.element_style.grid_row_start,
+                w:
+                  element.element_style.grid_column_end -
+                  element.element_style.grid_column_start,
+                h:
+                  element.element_style.grid_row_end -
+                  element.element_style.grid_row_start
               };
             });
 
@@ -92,10 +77,11 @@ class Main extends Component {
                 key={section.id}
               >
                 <GridLayout
+                  onLayoutChange={this.onLayoutChange}
                   layout={layout}
                   cols={12}
-                  width={600}
-                  rowHeight={600}
+                  width={930}
+                  rowHeight={300}
                 >
                   {section.elements.map(element => {
                     let elementStyle = {};
@@ -111,33 +97,40 @@ class Main extends Component {
                         .join("");
                       elementStyle[camelKey] = value;
                     }
-                    // debugger;
 
                     return element.tag === "img" ? (
-                      <div key={element.id.toString()}>
-                        <img
-                          key={element.id.toString()}
-                          style={elementStyle}
-                          src={element.src}
-                          alt=""
-                          onClick={event => this.props.onClick(event, element)}
-                        />
+                      <div
+                        key={element.id.toString()}
+                        data-grid={{
+                          x: element.grid_column_start,
+                          y: element.grid_row_start,
+                          w:
+                            element.grid_column_end - element.grid_column_start,
+                          h: element.grid_row_end - element.grid_row_start
+                        }}
+                        style={elementStyle}
+                        onMouseOver={event =>
+                          this.props.onMouseDown(event, element)
+                        }
+                      >
+                        <img src={element.src} alt="" />
                       </div>
                     ) : (
                       <p
+                        data-grid={{
+                          x: element.grid_column_start,
+                          y: element.grid_row_start,
+                          w:
+                            element.grid_column_end - element.grid_column_start,
+                          h: element.grid_row_end - element.grid_row_start
+                        }}
                         style={elementStyle}
                         key={element.id.toString()}
-                        onClick={event => this.props.onClick(event, element)}
+                        onMouseOver={event =>
+                          this.props.onMouseDown(event, element)
+                        }
                       >
-                        <Editor
-                          editorState={this.state.editorState}
-                          onChange={this.onChange}
-                          placeholder="Asdasd"
-                        />
-                        <Editor
-                          editorState={element.editorState}
-                          onChange={this.onChange}
-                        />
+                        {element.inner_text}
                       </p>
                     );
                   })}
@@ -150,4 +143,13 @@ class Main extends Component {
   }
 }
 
-export default connect(null, actions)(Main);
+const mapStateToProps = state => ({
+  sections: state.activeSite.sections,
+  activeElement: state.activeElement
+});
+
+export default connect(mapStateToProps, actions)(Main);
+
+// let item = this.props.sections
+// .map(section => section.elements)
+// .find(item => item.i === this.props.activeElement.id);
