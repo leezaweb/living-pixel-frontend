@@ -7,6 +7,10 @@ import * as actions from "./actions";
 import { connect } from "react-redux";
 
 class Body extends Component {
+  handleDoubleClick = event => {
+    debugger;
+    console.log("eventing");
+  };
   render() {
     let { body_style } = this.props.body;
     let style = {};
@@ -17,6 +21,8 @@ class Body extends Component {
         .join("");
       style[camelKey] = value;
     }
+    console.log(this.props.editing);
+
     return (
       <div className="art-board" style={style}>
         <Header
@@ -26,23 +32,28 @@ class Body extends Component {
             this.props.selectElement(this.props.header);
           }}
         />
-        <MainReArrange
-          onMouseDown={(event, element) => {
-            event.stopPropagation();
-            this.props.selectElement(element);
-          }}
-          onClick={(event, element) => {
-            event.stopPropagation();
-            this.props.selectElement(element);
-          }}
-        />
-        <MainEdit
-          sections={this.props.sections}
-          onMouseDown={(event, element) => {
-            event.stopPropagation();
-            this.props.selectElement(element);
-          }}
-        />
+        {this.props.editing ? (
+          <MainEdit
+            onDoubleClick={() => this.props.updateEditing(!this.props.editing)}
+            sections={this.props.sections}
+            onMouseDown={(event, element) => {
+              event.stopPropagation();
+              this.props.selectElement(element);
+            }}
+          />
+        ) : (
+          <MainReArrange
+            onDoubleClick={() => this.props.updateEditing(!this.props.editing)}
+            onMouseDown={(event, element) => {
+              event.stopPropagation();
+              this.props.selectElement(element);
+            }}
+            onClick={(event, element) => {
+              event.stopPropagation();
+              this.props.selectElement(element);
+            }}
+          />
+        )}
         <Footer
           footer={this.props.footer}
           onClick={event => {
@@ -55,10 +66,10 @@ class Body extends Component {
   }
 }
 
-// const mapStateToProps = state => ({
-//   activeSite: state.activeSite
-// });
-//
-// export default connect(mapStateToProps, actions)(Body);
+const mapStateToProps = state => ({
+  editing: state.editing
+});
 
-export default connect(null, actions)(Body);
+export default connect(mapStateToProps, actions)(Body);
+
+// export default connect(null, actions)(Body);

@@ -283,7 +283,6 @@ class Style extends Component {
                     multiple
                   >
                     {BORDERS.map(border => {
-                      console.log(this.props.activeElement[key][k[0]]);
                       return (
                         <option
                           style={{
@@ -324,6 +323,7 @@ class Style extends Component {
                     {FILTERS.map(filter => (
                       <option
                         style={{
+                          outline: "1px solid #444",
                           backdropFilter: filter
                         }}
                         value={filter}

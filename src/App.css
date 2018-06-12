@@ -1,3 +1,12 @@
+.remove {
+  position: absolute;
+  right: 2px;
+  top: 0px;
+  cursor: pointer;
+}
+.public-DraftEditor-content {
+  z-index: 999999999999;
+}
 .styleForm {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -177,9 +186,17 @@ main {
   position: relative;
 }
 
-.art-board > * > * > * {
+.editing .element,
+.react-grid-item {
   padding: 12px;
+  margin: 0;
+  transform: translate(10px, 10px);
 }
+
+.react-grid-item {
+  /* transform: translate(0px, 0px) !important; */
+}
+
 .ui-widget-header {
   border-color: #d5d5d5;
   border-style: solid;

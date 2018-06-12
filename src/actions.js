@@ -166,3 +166,11 @@ export function selectElement(element) {
     element
   };
 }
+
+export function updateEditing(editing) {
+  console.log("editing from actions");
+  return {
+    type: "UPDATE_EDITING",
+    editing
+  };
+}

@@ -1,7 +1,8 @@
 import { combineReducers } from "redux";
+import { Editor, EditorState, ContentState } from "draft-js";
 
 const initialState = {
-  thing: "thing",
+  editing: false,
   loading: true,
   sites: [],
   elements: [],
@@ -84,17 +85,17 @@ const activeSiteReducer = (state = initialState.activeSite, action) => {
   }
 };
 
-const thingReducer = (state = initialState.thing, action) => {
+const editingReducer = (state = initialState.editing, action) => {
   switch (action.type) {
-    case "UPDATE_THING":
-      return action.value;
+    case "UPDATE_EDITING":
+      return action.editing;
     default:
       return state;
   }
 };
 
 const rootReducer = combineReducers({
-  thing: thingReducer,
+  editing: editingReducer,
   loading: loadingReducer,
   sites: sitesReducer,
   elements: elementsReducer,

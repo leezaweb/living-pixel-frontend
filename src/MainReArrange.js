@@ -3,7 +3,7 @@ import GridLayout from "react-grid-layout";
 import * as actions from "./actions";
 import { connect } from "react-redux";
 
-class Main extends Component {
+class MainReArrange extends Component {
   onLayoutChange = (layout, layouts) => {
     if (
       this.props.activeElement &&
@@ -12,8 +12,6 @@ class Main extends Component {
       let item = layout.find(
         item => item.i === this.props.activeElement.id.toString()
       );
-      console.log(this.props.activeElement);
-      console.log("X", item.x);
 
       this.props.updateElement({
         key: "element_style",
@@ -26,21 +24,14 @@ class Main extends Component {
     }
   };
 
-  render() {
-    const figures = Array(48).fill("<div>Section > Figure</div>");
-    return (
-      <main>
-        {/*<section
-          className="section"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, 8%)",
-            gridTemplateRows: "repeat(4,1fr)",
-            placeContent: "space-around"
-          }}
-          dangerouslySetInnerHTML={{ __html: figures.join("") }}
-        />*/}
+  onRemoveItem(i) {
+    console.log("removing", i);
+    // this.setState({ items: _.reject(this.state.items, { i: i }) });
+  }
 
+  render() {
+    return (
+      <main class="re-arranging">
         {this.props.sections
           .sort((a, b) => a.sequence - b.sequence)
           .map((section, sectionIndex) => {
@@ -109,14 +100,22 @@ class Main extends Component {
                           h: element.grid_row_end - element.grid_row_start
                         }}
                         style={elementStyle}
+                        onDoubleClick={this.props.onDoubleClick}
                         onMouseOver={event =>
                           this.props.onMouseDown(event, element)
                         }
                       >
-                        <img src={element.src} alt="" />
+                        <span
+                          className="remove"
+                          onClick={this.onRemoveItem.bind(this, element.id)}
+                        >
+                          x
+                        </span>
+                        <img className="element" src={element.src} alt="" />
                       </div>
                     ) : (
                       <p
+                        className="element"
                         data-grid={{
                           x: element.grid_column_start,
                           y: element.grid_row_start,
@@ -126,10 +125,17 @@ class Main extends Component {
                         }}
                         style={elementStyle}
                         key={element.id.toString()}
+                        onDoubleClick={this.props.onDoubleClick}
                         onMouseOver={event =>
                           this.props.onMouseDown(event, element)
                         }
                       >
+                        <span
+                          className="remove"
+                          onClick={this.onRemoveItem.bind(this, element.id)}
+                        >
+                          x
+                        </span>
                         {element.inner_text}
                       </p>
                     );
@@ -148,7 +154,7 @@ const mapStateToProps = state => ({
   activeElement: state.activeElement
 });
 
-export default connect(mapStateToProps, actions)(Main);
+export default connect(mapStateToProps, actions)(MainReArrange);
 
 // let item = this.props.sections
 // .map(section => section.elements)
