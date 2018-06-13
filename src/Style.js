@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import * as actions from "./actions";
 import { connect } from "react-redux";
-import _ from "lodash";
 
 class Style extends Component {
   handleChange = (key, name, value, element) => {
@@ -11,6 +10,10 @@ class Style extends Component {
       value: value,
       element: element
     });
+  };
+
+  handleHover = e => {
+    e.target.focus();
   };
 
   render() {
@@ -203,6 +206,8 @@ class Style extends Component {
       "url('https://www.w3schools.com/css/img_tree.gif') center / 10% scroll"
     ];
 
+    const ALIGN = ["left", "right", "center", "justify"];
+
     let labelsFields;
     let key;
     if (this.props.activeElement) {
@@ -236,6 +241,7 @@ class Style extends Component {
                 <label key={v}>
                   {`${k[0].replace(/_/g, " ")}`}:<br />
                   <select
+                    onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
                     className="selectColor"
@@ -268,6 +274,7 @@ class Style extends Component {
                 <label key={v}>
                   {`${k[0].replace(/_/g, " ")}`}:<br />
                   <select
+                    onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
                     className="selectBorder"
@@ -302,6 +309,7 @@ class Style extends Component {
                 <label key={v}>
                   {`${k[0].replace(/_/g, " ")}`}:<br />
                   <select
+                    onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
                     onChange={event => {
@@ -333,10 +341,41 @@ class Style extends Component {
                     ))}
                   </select>
                 </label>
+              ) : k[0].includes("align") ? (
+                <label key={v}>
+                  {`${k[0].replace(/_/g, " ")}`}:<br />
+                  <select
+                    onMouseOver={this.handleHover}
+                    defaultValue={[this.props.activeElement[key][k[0]]]}
+                    name={k[0]}
+                    onChange={event => {
+                      event.persist();
+                      this.handleChange(
+                        key,
+                        k[0],
+                        event.target.value,
+                        this.props.activeElement
+                      );
+                    }}
+                    multiple
+                  >
+                    {ALIGN.map(align => (
+                      <option
+                        style={{
+                          textAlign: align
+                        }}
+                        value={align}
+                      >
+                        {align}
+                      </option>
+                    ))}
+                  </select>
+                </label>
               ) : k[0].includes("repeat") ? (
                 <label key={v}>
                   {`${k[0].replace(/_/g, " ")}`}:<br />
                   <select
+                    onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
                     onChange={event => {
@@ -369,6 +408,7 @@ class Style extends Component {
                 <label key={v}>
                   {`${k[0].replace(/_/g, " ")}`}:<br />
                   <select
+                    onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
                     onChange={event => {
@@ -400,6 +440,7 @@ class Style extends Component {
                 <label key={v}>
                   {`${k[0].replace(/_/g, " ")}`}:<br />
                   <select
+                    onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
                     onChange={event => {
@@ -420,7 +461,7 @@ class Style extends Component {
                       );
                       return (
                         <option
-                          selected
+                          defaultValue={[this.props.activeElement[key][k[0]]]}
                           style={{
                             background: attach
                           }}
@@ -437,7 +478,7 @@ class Style extends Component {
                   {`${k[0].replace(/_/g, " ")}`}:<br />
                   <input
                     type="text"
-                    size="10"
+                    size="5"
                     defaultValue={this.props.activeElement[key][k[0]]}
                     name={k[0]}
                     onChange={event => {

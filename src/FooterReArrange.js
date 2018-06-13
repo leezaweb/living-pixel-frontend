@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 
-class Footer extends Component {
+class FooterReArrange extends Component {
   render() {
+    // console.log(draftToHtml(JSON.parse(this.props.footer.inner_text)));
+    // console.log(JSON.parse(this.props.footer.inner_text));
+
     let { footer_style } = this.props.footer;
     let style = {};
     let elementStyleSansBorders = {};
@@ -17,7 +20,12 @@ class Footer extends Component {
     }
     return (
       <footer style={style}>
-        <h5 style={elementStyleSansBorders}>
+        <h5
+          style={elementStyleSansBorders}
+          onMouseDown={event =>
+            this.props.onMouseDown(event, this.props.footer)
+          }
+        >
           {JSON.parse(this.props.footer.inner_text).blocks[0].text}
           {/*<span
             dangerouslySetInnerHTML={{
@@ -30,4 +38,4 @@ class Footer extends Component {
   }
 }
 
-export default Footer;
+export default FooterReArrange;

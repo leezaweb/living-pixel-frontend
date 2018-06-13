@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import GridLayout from "react-grid-layout";
 import * as actions from "./actions";
 import { connect } from "react-redux";
+import draftToHtml from "draftjs-to-html";
 
 class MainReArrange extends Component {
   onLayoutChange = (layout, layouts) => {
@@ -13,25 +14,34 @@ class MainReArrange extends Component {
         item => item.i === this.props.activeElement.id.toString()
       );
 
-      this.props.updateElement({
-        key: "element_style",
-        grid_column_start: item.x,
-        grid_column_end: item.x + item.w,
-        grid_row_start: item.y,
-        grid_row_end: item.y + item.h,
-        element: this.props.activeElement
-      });
+      if (item)
+        this.props.updateElement({
+          key: "element_style",
+          grid_column_start: item.x,
+          grid_column_end: item.x + item.w,
+          grid_row_start: item.y,
+          grid_row_end: item.y + item.h,
+          element: this.props.activeElement
+        });
     }
   };
 
-  onRemoveItem(i) {
-    console.log("removing", i);
+  onRemoveItem(element) {
+    console.log("removing", element);
+    this.props.deleteElement({ element: element });
+
+    // this.setState({ items: _.reject(this.state.items, { i: i }) });
+  }
+  onCloneItem(element) {
+    console.log("cloning", element);
+
+    this.props.cloneElement({ element: element });
     // this.setState({ items: _.reject(this.state.items, { i: i }) });
   }
 
   render() {
     return (
-      <main class="re-arranging">
+      <main className="re-arranging">
         {this.props.sections
           .sort((a, b) => a.sequence - b.sequence)
           .map((section, sectionIndex) => {
@@ -71,11 +81,12 @@ class MainReArrange extends Component {
                   onLayoutChange={this.onLayoutChange}
                   layout={layout}
                   cols={12}
-                  width={930}
-                  rowHeight={300}
+                  width={870}
+                  rowHeight={400}
                 >
                   {section.elements.map(element => {
                     let elementStyle = {};
+                    let elementStyleSansBorders = {};
                     for (const [key, value] of Object.entries(
                       element.element_style
                     )) {
@@ -86,9 +97,15 @@ class MainReArrange extends Component {
                             i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)
                         )
                         .join("");
-                      elementStyle[camelKey] = value;
+                      if (camelKey === "gridColumnStart" && value === 0) {
+                        elementStyle[camelKey] = value + 1;
+                      } else {
+                        elementStyle[camelKey] = value;
+                      }
+                      if (!camelKey.includes("border")) {
+                        elementStyleSansBorders[camelKey] = value;
+                      }
                     }
-
                     return element.tag === "img" ? (
                       <div
                         key={element.id.toString()}
@@ -100,17 +117,22 @@ class MainReArrange extends Component {
                           h: element.grid_row_end - element.grid_row_start
                         }}
                         style={elementStyle}
-                        onDoubleClick={this.props.onDoubleClick}
+                        onDoubleClick={(event, element) =>
+                          this.props.onDoubleClick(event, element)
+                        }
                         onMouseOver={event =>
                           this.props.onMouseDown(event, element)
                         }
+                        onClick={event => this.props.onClick(event, element)}
                       >
                         <span
-                          className="remove"
-                          onClick={this.onRemoveItem.bind(this, element.id)}
-                        >
-                          x
-                        </span>
+                          className="icon-left fa fa-trash remove"
+                          onClick={this.onRemoveItem.bind(this, element)}
+                        />
+                        <span
+                          className="icon-left fa fa-clone copy"
+                          onClick={this.onCloneItem.bind(this, element)}
+                        />
                         <img className="element" src={element.src} alt="" />
                       </div>
                     ) : (
@@ -125,18 +147,29 @@ class MainReArrange extends Component {
                         }}
                         style={elementStyle}
                         key={element.id.toString()}
-                        onDoubleClick={this.props.onDoubleClick}
+                        onDoubleClick={(event, element) =>
+                          this.props.onDoubleClick(event, element)
+                        }
                         onMouseOver={event =>
                           this.props.onMouseDown(event, element)
                         }
+                        onClick={event => this.props.onClick(event, element)}
                       >
                         <span
-                          className="remove"
+                          className="icon-left fa fa-trash remove"
                           onClick={this.onRemoveItem.bind(this, element.id)}
-                        >
-                          x
-                        </span>
-                        {element.inner_text}
+                        />
+                        <span
+                          className="icon-left fa fa-clone copy"
+                          onClick={this.onCloneItem.bind(this, element.id)}
+                        />
+                        <span
+                          className="content"
+                          style={elementStyleSansBorders}
+                          dangerouslySetInnerHTML={{
+                            __html: draftToHtml(JSON.parse(element.inner_text))
+                          }}
+                        />
                       </p>
                     );
                   })}

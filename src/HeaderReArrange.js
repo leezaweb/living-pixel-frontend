@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import draftToHtml from "draftjs-to-html";
 
-class Header extends Component {
+class HeaderReArrange extends Component {
   render() {
     let { header_style } = this.props.header;
     let style = {};
@@ -17,18 +18,21 @@ class Header extends Component {
     }
     return (
       <header style={style}>
-        <h1 style={elementStyleSansBorders}>
-          {JSON.parse(this.props.header.inner_text).blocks[0].text}
-
-          {/*  <span
+        <h1
+          style={elementStyleSansBorders}
+          onMouseDown={event =>
+            this.props.onMouseDown(event, this.props.header)
+          }
+        >
+          <span
             dangerouslySetInnerHTML={{
               __html: draftToHtml(JSON.parse(this.props.header.inner_text))
             }}
-          />*/}
+          />
         </h1>
       </header>
     );
   }
 }
 
-export default Header;
+export default HeaderReArrange;

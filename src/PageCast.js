@@ -1,54 +1,27 @@
 import React, { Component } from "react";
 import Page from "./Page";
-import Body from "./Body";
+import BodyCast from "./BodyCast";
+import * as actions from "./actions";
+import { connect } from "react-redux";
+import { ProgressSpinner } from "primereact/components/progressspinner/ProgressSpinner";
 
 class PageCast extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      version: null,
-      url: "",
-      title: "",
-      team: [],
-      sections: [],
-      body: { body_style: {} },
-      header: { inner_text: "", header_style: {} },
-      footer: { inner_text: "", footer_style: {} }
-    };
-  }
   componentDidMount() {
-    fetch("http://localhost:3000/api/v1/sites")
-      .then(resp => resp.json())
-      .then(json => {
-        // debugger;
-        this.setState({
-          version: json[0].version,
-          url: json[0].url,
-          title: json[0].title,
-          team: json[0].teams,
-          sections: json[0].sections,
-          body: json[0].body,
-          header: json[0].header,
-          footer: json[0].footer
-        });
-      });
+    this.props.fetchSite();
   }
   render() {
     return (
       <div className="page-cast">
         <div>
-          <Page>
-            <Body
-              body={this.state.body}
-              header={this.state.header}
-              footer={this.state.footer}
-              sections={this.state.sections}
-            />
-          </Page>
+          <Page>{this.props.loading ? <ProgressSpinner /> : <BodyCast />}</Page>
         </div>
       </div>
     );
   }
 }
 
-export default PageCast;
+const mapStateToProps = state => ({
+  loading: state.loading
+});
+
+export default connect(mapStateToProps, actions)(PageCast);

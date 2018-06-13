@@ -1,15 +1,71 @@
-.remove {
-  position: absolute;
-  right: 2px;
-  top: 0px;
-  cursor: pointer;
+main:not(.re-arranging) > section {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-auto-rows: 1fr;
 }
-.public-DraftEditor-content {
-  z-index: 999999999999;
+
+h1 {
+  font-size: 5vw;
+  line-height: 0.1;
+}
+.buttons {
+  padding: 3px 0 9px;
+  margin: 0 0 12px;
+  border-style: inset inset solid;
+  border-width: 0px 0px 1px;
+  border-bottom-color: #aaa;
+  background-color: rgba(255, 255, 255, 0.3);
+  column-span: all;
+  font-size: 16px;
+  color: #555;
+  text-align: right;
+}
+.buttons li {
+  display: inline-block;
+  margin: 0 6px;
+}
+.buttons button:hover {
+  text-decoration: underline;
+}
+.buttons button,
+.status button,
+a {
+  background-color: transparent;
+  font-size: 16px;
+  color: #777;
+  border: 0;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 1px 7px 2px;
+}
+.buttons span {
+  cursor: default;
+}
+.buttons button:nth-child(n + 1) {
+  border-left: 1px solid #777;
+}
+
+.remove {
+  right: 33px;
+}
+.copy {
+  right: 3px;
+}
+
+.react-grid-item span.fa {
+  position: absolute;
+  top: -24px;
+  font-size: 24px;
+}
+
+header,
+footer,
+section {
+  cursor: pointer;
 }
 .styleForm {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 12px;
 }
 .styleForm input[type="number"] {
@@ -96,7 +152,7 @@ select:not(.selectColor) option {
 }
 .page-lab section > * {
   border: 1px dashed black;
-  word-break: break-all;
+  hyphens: auto;
 }
 
 .page-lab section:first-of-type > * {
@@ -107,6 +163,16 @@ select:not(.selectColor) option {
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-gap: 36px;
+}
+
+.page-lab main {
+  width: 96%;
+  margin: auto;
+}
+
+.page-cast main {
+  width: 960px;
+  margin: auto;
 }
 
 .atoms,
@@ -186,13 +252,16 @@ main {
   position: relative;
 }
 
-.editing .element,
-.react-grid-item {
-  padding: 12px;
-  margin: 0;
+.art-board .editing .element,
+.art-board .react-grid-item {
+  /* padding: 12px; */
+  /* margin: 0; */
   transform: translate(10px, 10px);
 }
 
+.art-board .react-grid-item .content {
+  padding: 12px 18px 12px 12px;
+}
 .react-grid-item {
   /* transform: translate(0px, 0px) !important; */
 }
@@ -212,9 +281,9 @@ main {
   border-style: solid;
   border-width: 0 1px 1px 1px !important;
 }
-html {
+.page-lab {
   padding: 18px;
 }
-.page div:first-child {
+.page > .status {
   text-align: center;
 }

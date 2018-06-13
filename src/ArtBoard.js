@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Body from "./Body";
+import BodyLab from "./BodyLab";
 import Page from "./Page";
 import Menu from "./Menu";
 import { Link } from "react-router-dom";
@@ -20,11 +20,37 @@ class ArtBoard extends Component {
           <ProgressSpinner />
         ) : (
           <Page>
-            <div>
-              Editing "{this.props.activeSite.title}" •
-              <Link to={"/page-cast"}> Preview</Link>
+            <div className="status">
+              {this.props.editing ? (
+                <span>
+                  Editing "{this.props.activeSite.title}"
+                  {" • "}
+                  <button
+                    onClick={event =>
+                      this.props.updateEditing(event, null, !this.props.editing)
+                    }
+                  >
+                    Re-arrange
+                  </button>
+                  {" • "}
+                </span>
+              ) : (
+                <span>
+                  Re-arranging "{this.props.activeSite.title}"
+                  {" • "}
+                  <button
+                    onClick={event =>
+                      this.props.updateEditing(event, null, !this.props.editing)
+                    }
+                  >
+                    Edit
+                  </button>
+                  {" • "}
+                </span>
+              )}
+              <Link to={"/page-cast"}>Preview</Link>
             </div>
-            <Body
+            <BodyLab
               body={this.props.activeSite.body}
               header={this.props.activeSite.header}
               footer={this.props.activeSite.footer}
@@ -39,6 +65,7 @@ class ArtBoard extends Component {
 
 const mapStateToProps = state => ({
   activeSite: state.activeSite,
+  editing: state.editing,
   loading: state.loading
 });
 

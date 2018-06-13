@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-import { Editor, EditorState, ContentState } from "draft-js";
 
 const initialState = {
   editing: false,
@@ -54,7 +53,7 @@ const activeElementReducer = (state = initialState.activeElement, action) => {
     case "DELETE_ELEMENT":
       return state;
     case "UPDATE_ELEMENT":
-      return action.element;
+      return { ...state, editorState: action.payload.editorState };
     default:
       return state;
   }
@@ -69,17 +68,43 @@ const activeSiteReducer = (state = initialState.activeSite, action) => {
     case "DELETE_SITE":
       return state;
     case "UPDATE_ELEMENT":
-      let as = state;
-      state.sections.forEach((s, x) => {
-        s.elements.forEach((e, y) => {
-          if (e.id === action.element.id) {
-            as.sections[x].elements[y].element_style =
-              action.element.element_style;
-          }
-        });
-      });
+      let key = Object.keys(action.payload.element).find(key =>
+        key.includes("_style")
+      );
 
-      return as;
+      if (key.includes("element")) {
+        let sections = state.sections.map(section => {
+          let elems = section.elements.map(element => {
+            if (element.id === action.payload.element.id) {
+              return {
+                ...element,
+                editorState: action.payload.editorState
+              };
+            } else {
+              return element;
+            }
+          });
+
+          return { ...section, elements: elems };
+        });
+
+        return { ...state, sections: sections };
+      } else if (key.includes("header")) {
+        let header = {
+          ...state.header,
+          editorState: action.payload.editorState
+        };
+        return { ...state, header: header };
+      } else if (key.includes("footer")) {
+        let footer = {
+          ...state.footer,
+          editorState: action.payload.editorState
+        };
+        return { ...state, footer: footer };
+      } else {
+        return state;
+      }
+
     default:
       return state;
   }

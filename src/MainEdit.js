@@ -1,71 +1,55 @@
 import React, { Component } from "react";
 import * as actions from "./actions";
 import { connect } from "react-redux";
-import { Editor, EditorState, ContentState } from "draft-js";
+import { Editor, RichUtils } from "draft-js";
 
 class MainEdit extends Component {
-  constructor(props) {
-    super(props);
-    this.myRef = React.createRef();
+  onChange = (editorState, element) => {
+    let key;
+    if (element) {
+      key = Object.keys(element).find(key => key.includes("_style"));
+    }
+    this.props.updateElement({
+      editorState: editorState,
+      element: element,
+      key: key
+    });
+  };
 
-    this.state = {
-      stateRef: null,
-      editorSections: this.mapPropsToState(),
-      editorState: EditorState.createWithContent(
-        ContentState.createFromText("Hello")
-      )
-    };
+  handleKeyCommand(command, editorState) {
+    const newState = RichUtils.handleKeyCommand(editorState, command);
+    if (newState) {
+      this.onChange(newState);
+      return "handled";
+    }
+    return "not-handled";
   }
 
-  onChange = editorState => {
-    let editorSections = this.state.editorSections.map(section => {
-      let elems = section.elements.map(element => {
-        if (element.id === this.props.activeElement.id) {
-          let text = element.editorState
-            ? element.editorState.getCurrentContent().getPlainText()
-            : "";
-          console.log(text[text.length - 1]);
+  onBoldClick(element) {
+    this.onChange(
+      RichUtils.toggleInlineStyle(element.editorState, "BOLD"),
+      element
+    );
+  }
 
-          return {
-            ...element,
-            editorState: editorState
-          };
-        } else {
-          return element;
-        }
-      });
+  onItalicClick(element) {
+    this.onChange(
+      RichUtils.toggleInlineStyle(element.editorState, "ITALIC"),
+      element
+    );
+  }
 
-      return { ...section, elements: elems };
-    });
-
-    this.setState({ editorSections: editorSections });
-  };
-
-  mapPropsToState = () => {
-    return this.props.sections.map(section => {
-      let elems = section.elements.map(element => {
-        if (element.inner_text) {
-          return {
-            ...element,
-            editorState: EditorState.createWithContent(
-              ContentState.createFromText(element.inner_text)
-            )
-          };
-        } else {
-          return element;
-        }
-      });
-
-      return { ...section, elements: elems };
-    });
-  };
+  onCodeClick(element) {
+    this.onChange(
+      RichUtils.toggleInlineStyle(element.editorState, "CODE"),
+      element
+    );
+  }
 
   render() {
-    console.log(this.state.editorSections);
-
     return (
-      <main class="editing">
-        {this.state.editorSections
+      <main className="editing">
+        {this.props.sections
           .sort((a, b) => a.sequence - b.sequence)
           .map((section, sectionIndex) => {
             let sectionStyle = {};
@@ -81,7 +65,11 @@ class MainEdit extends Component {
             }
 
             return (
-              <section style={sectionStyle} key={section.id}>
+              <section
+                style={sectionStyle}
+                onMouseDown={event => this.props.onMouseDown(event, section)}
+                key={section.id}
+              >
                 {section.elements.map(element => {
                   let elementStyle = {};
                   for (const [key, value] of Object.entries(
@@ -96,18 +84,20 @@ class MainEdit extends Component {
                       .join("");
                     elementStyle[camelKey] = value;
                   }
-                  // debugger;
 
                   return element.tag === "img" ? (
                     <div
-                      onMouseOver={event =>
+                      style={elementStyle}
+                      onDoubleClick={event =>
+                        this.props.onDoubleClick(event, element)
+                      }
+                      onMouseDown={event =>
                         this.props.onMouseDown(event, element)
                       }
                     >
                       <img
                         className="element"
                         key={element.id.toString()}
-                        style={elementStyle}
                         src={element.src}
                         alt=""
                       />
@@ -117,14 +107,38 @@ class MainEdit extends Component {
                       className="element"
                       key={element.id.toString()}
                       style={elementStyle}
-                      onMouseOver={event =>
+                      onDoubleClick={event =>
+                        this.props.onDoubleClick(event, element)
+                      }
+                      onMouseDown={event =>
                         this.props.onMouseDown(event, element)
                       }
                     >
+                      <ul className="buttons">
+                        <li>
+                          <span>STYLE:</span>
+                        </li>
+                        <li>
+                          <button onClick={() => this.onBoldClick(element)}>
+                            Bold
+                          </button>
+                        </li>
+                        <li>
+                          <button onClick={() => this.onItalicClick(element)}>
+                            Italic
+                          </button>
+                        </li>
+                        <li>
+                          <button onClick={() => this.onCodeClick(element)}>
+                            Code
+                          </button>
+                        </li>
+                      </ul>
+
                       <Editor
-                        editorKey={element.id}
+                        handleKeyCommand={this.handleKeyCommand}
                         editorState={element.editorState}
-                        onChange={this.onChange}
+                        onChange={e => this.onChange(e, element)}
                       />
                     </div>
                   );
@@ -143,14 +157,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, actions)(MainEdit);
-
-// {/*<section
-//   className="section"
-//   style={{
-//     display: "grid",
-//     gridTemplateColumns: "repeat(auto-fill, 8%)",
-//     gridTemplateRows: "repeat(4,1fr)",
-//     placeContent: "space-around"
-//   }}
-//   dangerouslySetInnerHTML={{ __html: figures.join("") }}
-// />*/}
