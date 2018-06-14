@@ -12,7 +12,7 @@
     "react": "^16.4.0",
     "react-css-grid": "^2.0.0-0",
     "react-dom": "^16.4.0",
-    "react-dropzone": "^4.2.11",
+    "react-draggable": "^3.0.5",
     "react-grid-layout": "^0.16.6",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.0",
@@ -23,7 +23,7 @@
     "sanitize-html": "^1.18.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3006 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

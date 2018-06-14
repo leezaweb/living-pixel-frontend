@@ -70,79 +70,81 @@ class MainEdit extends Component {
                 onMouseDown={event => this.props.onMouseDown(event, section)}
                 key={section.id}
               >
-                {section.elements.map(element => {
-                  let elementStyle = {};
-                  for (const [key, value] of Object.entries(
-                    element.element_style
-                  )) {
-                    let camelKey = key
-                      .split("_")
-                      .map(
-                        (w, i) =>
-                          i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)
-                      )
-                      .join("");
-                    elementStyle[camelKey] = value;
-                  }
+                <div>
+                  {section.elements.map(element => {
+                    let elementStyle = {};
+                    for (const [key, value] of Object.entries(
+                      element.element_style
+                    )) {
+                      let camelKey = key
+                        .split("_")
+                        .map(
+                          (w, i) =>
+                            i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)
+                        )
+                        .join("");
+                      elementStyle[camelKey] = value;
+                    }
 
-                  return element.tag === "img" ? (
-                    <div
-                      style={elementStyle}
-                      onDoubleClick={event =>
-                        this.props.onDoubleClick(event, element)
-                      }
-                      onMouseDown={event =>
-                        this.props.onMouseDown(event, element)
-                      }
-                    >
-                      <img
+                    return element.tag === "img" ? (
+                      <div
+                        style={elementStyle}
+                        onDoubleClick={event =>
+                          this.props.onDoubleClick(event, element)
+                        }
+                        onMouseDown={event =>
+                          this.props.onMouseDown(event, element)
+                        }
+                      >
+                        <img
+                          className="element"
+                          key={element.id.toString()}
+                          src={element.src}
+                          alt=""
+                        />
+                      </div>
+                    ) : (
+                      <div
                         className="element"
                         key={element.id.toString()}
-                        src={element.src}
-                        alt=""
-                      />
-                    </div>
-                  ) : (
-                    <div
-                      className="element"
-                      key={element.id.toString()}
-                      style={elementStyle}
-                      onDoubleClick={event =>
-                        this.props.onDoubleClick(event, element)
-                      }
-                      onMouseDown={event =>
-                        this.props.onMouseDown(event, element)
-                      }
-                    >
-                      <ul className="buttons">
-                        <li>
-                          <span>STYLE:</span>
-                        </li>
-                        <li>
-                          <button onClick={() => this.onBoldClick(element)}>
-                            Bold
-                          </button>
-                        </li>
-                        <li>
-                          <button onClick={() => this.onItalicClick(element)}>
-                            Italic
-                          </button>
-                        </li>
-                        <li>
-                          <button onClick={() => this.onCodeClick(element)}>
-                            Code
-                          </button>
-                        </li>
-                      </ul>
+                        style={elementStyle}
+                        onDoubleClick={event =>
+                          this.props.onDoubleClick(event, element)
+                        }
+                        onMouseDown={event =>
+                          this.props.onMouseDown(event, element)
+                        }
+                      >
+                        <ul className="buttons">
+                          <li>
+                            <span>STYLE:</span>
+                          </li>
+                          <li>
+                            <button onClick={() => this.onBoldClick(element)}>
+                              Bold
+                            </button>
+                          </li>
+                          <li>
+                            <button onClick={() => this.onItalicClick(element)}>
+                              Italic
+                            </button>
+                          </li>
+                          <li>
+                            <button onClick={() => this.onCodeClick(element)}>
+                              Code
+                            </button>
+                          </li>
+                        </ul>
 
-                      <Editor
-                        handleKeyCommand={this.handleKeyCommand}
-                        editorState={element.editorState}
-                        onChange={e => this.onChange(e, element)}
-                      />
-                    </div>
-                  );
-                })}
+                        <Editor
+                          handleKeyCommand={this.handleKeyCommand}
+                          editorState={element.editorState}
+                          onChange={e => this.onChange(e, element)}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
               </section>
             );
           })}

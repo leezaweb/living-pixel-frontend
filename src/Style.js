@@ -17,6 +17,10 @@ class Style extends Component {
   };
 
   render() {
+    console.log(
+      "NEW PROPS",
+      this.props.activeElement.element_style.grid_column_end
+    );
     const COLORS = [
       "Black",
       "Navy",
@@ -219,7 +223,8 @@ class Style extends Component {
           if (!k[0].includes("_id") && k[0] !== "id") {
             return typeof k[1] === "number" ? (
               <label key={v}>
-                {`${k[0].replace(/_/g, " ")}`}:<br />
+                <span>{`${k[0].replace(/_/g, " ")}`}:</span>
+                <br />
                 <input
                   style={{ width: 100 }}
                   type="number"
@@ -239,7 +244,8 @@ class Style extends Component {
             ) : typeof k[1] === "string" ? (
               k[0].includes("color") ? (
                 <label key={v}>
-                  {`${k[0].replace(/_/g, " ")}`}:<br />
+                  <span>{`${k[0].replace(/_/g, " ")}`}:</span>
+                  <br />
                   <select
                     onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
@@ -272,7 +278,8 @@ class Style extends Component {
                 </label>
               ) : k[0].includes("style") ? (
                 <label key={v}>
-                  {`${k[0].replace(/_/g, " ")}`}:<br />
+                  <span>{`${k[0].replace(/_/g, " ")}`}:</span>
+                  <br />
                   <select
                     onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
@@ -307,7 +314,8 @@ class Style extends Component {
                 </label>
               ) : k[0].includes("filter") ? (
                 <label key={v}>
-                  {`${k[0].replace(/_/g, " ")}`}:<br />
+                  <span>{`${k[0].replace(/_/g, " ")}`}:</span>
+                  <br />
                   <select
                     onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
@@ -343,7 +351,8 @@ class Style extends Component {
                 </label>
               ) : k[0].includes("align") ? (
                 <label key={v}>
-                  {`${k[0].replace(/_/g, " ")}`}:<br />
+                  <span>{`${k[0].replace(/_/g, " ")}`}:</span>
+                  <br />
                   <select
                     onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
@@ -373,7 +382,8 @@ class Style extends Component {
                 </label>
               ) : k[0].includes("repeat") ? (
                 <label key={v}>
-                  {`${k[0].replace(/_/g, " ")}`}:<br />
+                  <span>{`${k[0].replace(/_/g, " ")}`}:</span>
+                  <br />
                   <select
                     onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
@@ -406,7 +416,8 @@ class Style extends Component {
                 </label>
               ) : k[0].includes("size") ? (
                 <label key={v}>
-                  {`${k[0].replace(/_/g, " ")}`}:<br />
+                  <span>{`${k[0].replace(/_/g, " ")}`}:</span>
+                  <br />
                   <select
                     onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
@@ -438,7 +449,8 @@ class Style extends Component {
                 </label>
               ) : k[0].includes("attach") ? (
                 <label key={v}>
-                  {`${k[0].replace(/_/g, " ")}`}:<br />
+                  <span>{`${k[0].replace(/_/g, " ")}`}:</span>
+                  <br />
                   <select
                     onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
@@ -475,7 +487,8 @@ class Style extends Component {
                 </label>
               ) : (
                 <label key={v}>
-                  {`${k[0].replace(/_/g, " ")}`}:<br />
+                  <span>{`${k[0].replace(/_/g, " ")}`}:</span>
+                  <br />
                   <input
                     type="text"
                     size="5"

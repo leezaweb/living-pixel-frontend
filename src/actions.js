@@ -213,25 +213,6 @@ const fetchToElement = (object, data, id, dispatch) => {
       fetch(`${SITE_URL}/1`).then(resp => {
         return resp.json();
       })
-      // .then(json => {
-      //   dispatch(
-      //     updateSite({
-      //       version: json.version,
-      //       url: json.url,
-      //       title: json.title,
-      //       team: json.teams,
-      //       sections: mapSectionsToEditors(json),
-      //       body: json.body,
-      //       header: json.header,
-      //       footer:  {
-      //   ...json.footer,
-      //   editorState: EditorState.createWithContent(
-      //     convertFromRaw(JSON.parse(json.footer.inner_text))
-      //   )
-      // }
-      //     })
-      //   );
-      // })
     );
 };
 
@@ -254,6 +235,19 @@ const fetchToStyle = (object, data, id, dispatch) => {
         })
         .then(json => {
           dispatch(updateSite(siteWithEditors(json)));
+          return json;
+        })
+        .then(json => {
+          let elements = [].concat.apply(
+            [],
+            json.sections.map(section => section.elements)
+          );
+
+          let updatedElement = elements.find(
+            element => element.id === object.element.id
+          );
+
+          selectElement(updatedElement);
         })
     );
 };
@@ -302,7 +296,6 @@ const elementDeleter = (dispatch, object) => {
 };
 
 export function selectElement(element) {
-  console.log("id", element.id);
   return {
     type: "SELECT_ELEMENT",
     element

@@ -21,14 +21,7 @@ class BodyLab extends Component {
     }
 
     return this.props.editing ? (
-      <div
-        className="art-board"
-        style={style}
-        onMouseDown={event => {
-          event.stopPropagation();
-          this.props.selectElement(this.props.header);
-        }}
-      >
+      <div className="art-board" style={style}>
         <HeaderEdit
           header={this.props.header}
           onMouseDown={event => {
@@ -61,14 +54,7 @@ class BodyLab extends Component {
         />
       </div>
     ) : (
-      <div
-        className="art-board"
-        style={style}
-        onMouseDown={event => {
-          event.stopPropagation();
-          this.props.selectElement(this.props.body);
-        }}
-      >
+      <div className="art-board" style={style}>
         <HeaderReArrange
           header={this.props.header}
           onMouseDown={event => {

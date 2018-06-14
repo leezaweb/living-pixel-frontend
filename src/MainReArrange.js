@@ -6,6 +6,8 @@ import draftToHtml from "draftjs-to-html";
 
 class MainReArrange extends Component {
   onLayoutChange = (layout, layouts) => {
+    let that = this;
+    // debugger;
     if (
       this.props.activeElement &&
       "element_style" in this.props.activeElement
@@ -14,7 +16,7 @@ class MainReArrange extends Component {
         item => item.i === this.props.activeElement.id.toString()
       );
 
-      if (item)
+      if (item) {
         this.props.updateElement({
           key: "element_style",
           grid_column_start: item.x,
@@ -23,20 +25,15 @@ class MainReArrange extends Component {
           grid_row_end: item.y + item.h,
           element: this.props.activeElement
         });
+      }
     }
   };
 
   onRemoveItem(element) {
-    console.log("removing", element);
     this.props.deleteElement({ element: element });
-
-    // this.setState({ items: _.reject(this.state.items, { i: i }) });
   }
   onCloneItem(element) {
-    console.log("cloning", element);
-
     this.props.cloneElement({ element: element });
-    // this.setState({ items: _.reject(this.state.items, { i: i }) });
   }
 
   render() {
@@ -77,103 +74,111 @@ class MainReArrange extends Component {
                 onClick={event => this.props.onClick(event, section)}
                 key={section.id}
               >
-                <GridLayout
-                  onLayoutChange={this.onLayoutChange}
-                  layout={layout}
-                  cols={12}
-                  width={870}
-                  rowHeight={400}
-                >
-                  {section.elements.map(element => {
-                    let elementStyle = {};
-                    let elementStyleSansBorders = {};
-                    for (const [key, value] of Object.entries(
-                      element.element_style
-                    )) {
-                      let camelKey = key
-                        .split("_")
-                        .map(
-                          (w, i) =>
-                            i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)
-                        )
-                        .join("");
-                      if (camelKey === "gridColumnStart" && value === 0) {
-                        elementStyle[camelKey] = value + 1;
-                      } else {
-                        elementStyle[camelKey] = value;
+                <div>
+                  <GridLayout
+                    onLayoutChange={this.onLayoutChange}
+                    layout={layout}
+                    cols={12}
+                    width={870}
+                    rowHeight={200}
+                  >
+                    {section.elements.map(element => {
+                      let elementStyle = {};
+                      let elementStyleSansBorders = {};
+                      for (const [key, value] of Object.entries(
+                        element.element_style
+                      )) {
+                        let camelKey = key
+                          .split("_")
+                          .map(
+                            (w, i) =>
+                              i === 0
+                                ? w
+                                : w.charAt(0).toUpperCase() + w.slice(1)
+                          )
+                          .join("");
+                        if (camelKey === "gridColumnStart" && value === 0) {
+                          elementStyle[camelKey] = value + 1;
+                        } else {
+                          elementStyle[camelKey] = value;
+                        }
+                        if (!camelKey.includes("border")) {
+                          elementStyleSansBorders[camelKey] = value;
+                        }
                       }
-                      if (!camelKey.includes("border")) {
-                        elementStyleSansBorders[camelKey] = value;
-                      }
-                    }
-                    return element.tag === "img" ? (
-                      <div
-                        key={element.id.toString()}
-                        data-grid={{
-                          x: element.grid_column_start,
-                          y: element.grid_row_start,
-                          w:
-                            element.grid_column_end - element.grid_column_start,
-                          h: element.grid_row_end - element.grid_row_start
-                        }}
-                        style={elementStyle}
-                        onDoubleClick={(event, element) =>
-                          this.props.onDoubleClick(event, element)
-                        }
-                        onMouseOver={event =>
-                          this.props.onMouseDown(event, element)
-                        }
-                        onClick={event => this.props.onClick(event, element)}
-                      >
-                        <span
-                          className="icon-left fa fa-trash remove"
-                          onClick={this.onRemoveItem.bind(this, element)}
-                        />
-                        <span
-                          className="icon-left fa fa-clone copy"
-                          onClick={this.onCloneItem.bind(this, element)}
-                        />
-                        <img className="element" src={element.src} alt="" />
-                      </div>
-                    ) : (
-                      <p
-                        className="element"
-                        data-grid={{
-                          x: element.grid_column_start,
-                          y: element.grid_row_start,
-                          w:
-                            element.grid_column_end - element.grid_column_start,
-                          h: element.grid_row_end - element.grid_row_start
-                        }}
-                        style={elementStyle}
-                        key={element.id.toString()}
-                        onDoubleClick={(event, element) =>
-                          this.props.onDoubleClick(event, element)
-                        }
-                        onMouseOver={event =>
-                          this.props.onMouseDown(event, element)
-                        }
-                        onClick={event => this.props.onClick(event, element)}
-                      >
-                        <span
-                          className="icon-left fa fa-trash remove"
-                          onClick={this.onRemoveItem.bind(this, element.id)}
-                        />
-                        <span
-                          className="icon-left fa fa-clone copy"
-                          onClick={this.onCloneItem.bind(this, element.id)}
-                        />
-                        <span
-                          className="content"
-                          style={elementStyleSansBorders}
-                          dangerouslySetInnerHTML={{
-                            __html: draftToHtml(JSON.parse(element.inner_text))
+                      return element.tag === "img" ? (
+                        <div
+                          key={element.id.toString()}
+                          data-grid={{
+                            x: element.grid_column_start,
+                            y: element.grid_row_start,
+                            w:
+                              element.grid_column_end -
+                              element.grid_column_start,
+                            h: element.grid_row_end - element.grid_row_start
                           }}
-                        />
-                      </p>
-                    );
-                  })}
-                </GridLayout>
+                          style={elementStyle}
+                          onDoubleClick={(event, element) =>
+                            this.props.onDoubleClick(event, element)
+                          }
+                          onMouseDown={event =>
+                            this.props.onMouseDown(event, element)
+                          }
+                          onClick={event => this.props.onClick(event, element)}
+                        >
+                          <span
+                            className="icon-left fa fa-trash remove"
+                            onClick={this.onRemoveItem.bind(this, element)}
+                          />
+                          <span
+                            className="icon-left fa fa-clone copy"
+                            onClick={this.onCloneItem.bind(this, element)}
+                          />
+                          <img className="element" src={element.src} alt="" />
+                        </div>
+                      ) : (
+                        <p
+                          className="element"
+                          data-grid={{
+                            x: element.grid_column_start,
+                            y: element.grid_row_start,
+                            w:
+                              element.grid_column_end -
+                              element.grid_column_start,
+                            h: element.grid_row_end - element.grid_row_start
+                          }}
+                          style={elementStyle}
+                          key={element.id.toString()}
+                          onDoubleClick={(event, element) =>
+                            this.props.onDoubleClick(event, element)
+                          }
+                          onMouseDown={event =>
+                            this.props.onMouseDown(event, element)
+                          }
+                          onClick={event => this.props.onClick(event, element)}
+                        >
+                          <span
+                            className="icon-left fa fa-trash remove"
+                            onClick={this.onRemoveItem.bind(this, element)}
+                          />
+                          <span
+                            className="icon-left fa fa-clone copy"
+                            onClick={this.onCloneItem.bind(this, element)}
+                          />
+                          <span
+                            className="content"
+                            style={elementStyleSansBorders}
+                            dangerouslySetInnerHTML={{
+                              __html: draftToHtml(
+                                JSON.parse(element.inner_text)
+                              )
+                            }}
+                          />
+                        </p>
+                      );
+                    })}
+                  </GridLayout>
+                </div>
               </section>
             );
           })}
