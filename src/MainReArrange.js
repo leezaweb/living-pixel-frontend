@@ -3,11 +3,36 @@ import GridLayout from "react-grid-layout";
 import * as actions from "./actions";
 import { connect } from "react-redux";
 import draftToHtml from "draftjs-to-html";
+import Dropzone from "react-dropzone";
+import { CirclePicker } from "react-color";
+import { COLORS } from "./Colors";
 
 class MainReArrange extends Component {
+  constructor() {
+    super();
+    this.state = {
+      files: [],
+      displayColorPicker: false,
+      pickerLeft: null,
+      pickerTop: null
+    };
+  }
+
+  handleChangeComplete = color => {
+    console.log(color);
+  };
+
+  onDrop(files) {
+    console.log(files);
+    this.setState(
+      {
+        files
+      },
+      () => console.log(this.state)
+    );
+  }
+
   onLayoutChange = (layout, layouts) => {
-    let that = this;
-    // debugger;
     if (
       this.props.activeElement &&
       "element_style" in this.props.activeElement
@@ -36,9 +61,48 @@ class MainReArrange extends Component {
     this.props.cloneElement({ element: element });
   }
 
+  componentDidMount() {
+    let sections = [...document.querySelectorAll("section")];
+    sections.forEach(section => {
+      // let section = document.querySelector(s);
+      let id = section.dataset.id;
+      let allChildren = [...section.getElementsByTagName("*")];
+      allChildren.forEach(child => {
+        child.classList.add(`section-${id}`);
+        child.setAttribute("data-id", id);
+      });
+    });
+  }
+
+  handleDoubleClick = event => {
+    this.setState({
+      pickerLeft: event.pageX - 25,
+      pickerTop: event.pageY - 100,
+      displayColorPicker: !this.state.displayColorPicker
+    });
+  };
+
   render() {
+    const colorPicker = (
+      <div
+        style={{
+          position: "absolute",
+          left: this.state.pickerLeft,
+          top: this.state.pickerTop
+        }}
+      >
+        <CirclePicker
+          colors={COLORS}
+          width={150}
+          circleSize={14}
+          circleSpacing={7}
+          onChangeComplete={this.handleChangeComplete}
+        />
+      </div>
+    );
     return (
       <main className="re-arranging">
+        {this.state.displayColorPicker ? colorPicker : null}
         {this.props.sections
           .sort((a, b) => a.sequence - b.sequence)
           .map((section, sectionIndex) => {
@@ -72,15 +136,21 @@ class MainReArrange extends Component {
               <section
                 style={sectionStyle}
                 onClick={event => this.props.onClick(event, section)}
+                onDoubleClick={this.handleDoubleClick}
                 key={section.id}
+                onDragOver={e => this.props.dragOver(e)}
+                data-id={section.id}
+                className={`section-${section.id}`}
               >
-                <div>
+                <div data-id={section.id} className={`section-${section.id}`}>
                   <GridLayout
                     onLayoutChange={this.onLayoutChange}
                     layout={layout}
                     cols={12}
                     width={870}
                     rowHeight={200}
+                    data-id={section.id}
+                    className={`section-${section.id}`}
                   >
                     {section.elements.map(element => {
                       let elementStyle = {};
@@ -124,7 +194,9 @@ class MainReArrange extends Component {
                           onMouseDown={event =>
                             this.props.onMouseDown(event, element)
                           }
-                          onClick={event => this.props.onClick(event, element)}
+                          onClick={event =>
+                            this.props.onMouseDown(event, element)
+                          }
                         >
                           <span
                             className="icon-left fa fa-trash remove"
@@ -134,11 +206,22 @@ class MainReArrange extends Component {
                             className="icon-left fa fa-clone copy"
                             onClick={this.onCloneItem.bind(this, element)}
                           />
-                          <img className="element" src={element.src} alt="" />
+
+                          <img
+                            className={`element section-${section.id}`}
+                            data-id={section.id}
+                            src={element.src}
+                            alt=""
+                          />
+                          <Dropzone
+                            onDrop={this.onDrop.bind(this)}
+                            style={{ border: "none" }}
+                          >
+                            <i className="fa fa-upload" />
+                          </Dropzone>
                         </div>
                       ) : (
-                        <p
-                          className="element"
+                        <div
                           data-grid={{
                             x: element.grid_column_start,
                             y: element.grid_row_start,
@@ -155,7 +238,9 @@ class MainReArrange extends Component {
                           onMouseDown={event =>
                             this.props.onMouseDown(event, element)
                           }
-                          onClick={event => this.props.onClick(event, element)}
+                          onClick={event =>
+                            this.props.onMouseDown(event, element)
+                          }
                         >
                           <span
                             className="icon-left fa fa-trash remove"
@@ -165,16 +250,15 @@ class MainReArrange extends Component {
                             className="icon-left fa fa-clone copy"
                             onClick={this.onCloneItem.bind(this, element)}
                           />
-                          <span
+                          <div
                             className="content"
-                            style={elementStyleSansBorders}
                             dangerouslySetInnerHTML={{
                               __html: draftToHtml(
                                 JSON.parse(element.inner_text)
                               )
                             }}
                           />
-                        </p>
+                        </div>
                       );
                     })}
                   </GridLayout>

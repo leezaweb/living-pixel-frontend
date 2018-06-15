@@ -56,7 +56,14 @@ class Main extends Component {
                     }
 
                     return element.tag === "img" ? (
-                      <div key={element.id.toString()} style={elementStyle}>
+                      <div
+                        key={element.id.toString()}
+                        style={{
+                          ...elementStyle,
+                          position: "relative",
+                          overflow: "hidden"
+                        }}
+                      >
                         <img className="element" src={element.src} alt="" />
                       </div>
                     ) : (

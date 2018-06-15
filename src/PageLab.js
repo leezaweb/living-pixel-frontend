@@ -3,6 +3,8 @@ import ArtBoard from "./ArtBoard";
 import Account from "./Account";
 import Panel from "./Panel";
 import { Route, Switch } from "react-router-dom";
+import * as actions from "./actions";
+import { connect } from "react-redux";
 
 class PageLab extends Component {
   render() {
@@ -22,4 +24,4 @@ class PageLab extends Component {
   }
 }
 
-export default PageLab;
+export default connect(null, actions)(PageLab);

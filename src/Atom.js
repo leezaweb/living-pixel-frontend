@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Draggable, { DraggableCore } from "react-draggable";
+import Draggable from "react-draggable";
 
 class Atom extends Component {
   constructor() {
@@ -19,7 +19,7 @@ class Atom extends Component {
 
   render() {
     const dragHandlers = { onStart: this.onStart, onStop: this.onStop };
-    const { deltaPosition, controlledPosition } = this.state;
+    const { controlledPosition } = this.state;
 
     return (
       <Draggable

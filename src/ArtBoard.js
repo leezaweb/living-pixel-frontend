@@ -50,12 +50,7 @@ class ArtBoard extends Component {
               )}
               <Link to={"/page-cast"}>Preview</Link>
             </div>
-            <BodyLab
-              body={this.props.activeSite.body}
-              header={this.props.activeSite.header}
-              footer={this.props.activeSite.footer}
-              sections={this.props.activeSite.sections}
-            />
+            <BodyLab />
           </Page>
         )}
       </main>

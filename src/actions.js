@@ -1,5 +1,53 @@
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 
+export const dragStart = e => {
+  const thunk = dispatch => {
+    console.log("start");
+    this.dragged = e.currentTarget;
+    this.dragged.style.opacity = "0.5";
+    // e.dataTransfer.effectAllowed = "move";
+    // e.dataTransfer.setData("text/html", e.currentTarget);
+  };
+  return thunk;
+};
+
+export const dragEnd = e => {
+  const thunk = dispatch => {
+    console.log("end");
+    this.dragged.style.opacity = "1";
+    alert(
+      `"${this.dragged.dataset.id}" dragged over Section ${
+        this.over.dataset.id
+      }`
+    );
+    console.log(this.dragged.dataset.id);
+    console.log(this.over.dataset.id);
+  };
+  return thunk;
+};
+
+export const dragOver = e => {
+  const thunk = dispatch => {
+    console.log("over");
+    e.preventDefault();
+    // this.dragged.style.display = "none";
+    let classList = [...e.target.classList];
+    let bool = classList.find(c => c.includes("section-"));
+    console.log(bool);
+    if (!bool) return;
+    if (bool) {
+      this.over = e.target;
+      dragEnd(e);
+      return;
+    }
+    console.log(e.target.tagName);
+
+    console.log(this.over.tagName, this.over.className);
+    console.log(this.over.dataset.id);
+  };
+  return thunk;
+};
+
 const SITE_URL = "http://localhost:3000/api/v1/sites";
 
 const mapSectionsToEditors = json => {
@@ -235,9 +283,7 @@ const fetchToStyle = (object, data, id, dispatch) => {
         })
         .then(json => {
           dispatch(updateSite(siteWithEditors(json)));
-          return json;
-        })
-        .then(json => {
+
           let elements = [].concat.apply(
             [],
             json.sections.map(section => section.elements)
@@ -246,7 +292,10 @@ const fetchToStyle = (object, data, id, dispatch) => {
           let updatedElement = elements.find(
             element => element.id === object.element.id
           );
-
+          // console.log(
+          //   "gonna select",
+          //   updatedElement.element_style.grid_column_end
+          // );
           selectElement(updatedElement);
         })
     );
@@ -296,6 +345,7 @@ const elementDeleter = (dispatch, object) => {
 };
 
 export function selectElement(element) {
+  console.log("in selectElement");
   return {
     type: "SELECT_ELEMENT",
     element

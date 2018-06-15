@@ -67,6 +67,7 @@ const activeSiteReducer = (state = initialState.activeSite, action) => {
       return state;
     case "DELETE_SITE":
       return state;
+
     case "UPDATE_ELEMENT":
       let key = Object.keys(action.payload.element).find(key =>
         key.includes("_style")

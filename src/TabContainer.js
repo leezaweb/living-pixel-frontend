@@ -9,9 +9,16 @@ import { connect } from "react-redux";
 
 class TabContainer extends Component {
   render() {
-    const atoms = Array(20).fill(<Atom />);
-    const molecules = Array(20).fill(<Molecule />);
-    const organisms = Array(20).fill(<Organism />);
+    const count = new Array(6);
+    let atoms = [];
+    let molecules = [];
+    let organisms = [];
+
+    for (const i of count.entries()) {
+      atoms.push(<Atom key={i} />);
+      molecules.push(<Molecule key={i} />);
+      organisms.push(<Organism key={i} />);
+    }
 
     let key;
     if (this.props.activeElement) {

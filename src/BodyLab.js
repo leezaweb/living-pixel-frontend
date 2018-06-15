@@ -23,10 +23,9 @@ class BodyLab extends Component {
     return this.props.editing ? (
       <div className="art-board" style={style}>
         <HeaderEdit
-          header={this.props.header}
-          onMouseDown={event => {
+          onMouseDown={(event, section) => {
             event.stopPropagation();
-            this.props.selectElement(this.props.header);
+            this.props.selectElement(section);
           }}
           onDoubleClick={(event, element) =>
             this.props.updateEditing(event, element, !this.props.editing)
@@ -36,17 +35,15 @@ class BodyLab extends Component {
           onDoubleClick={(event, element) =>
             this.props.updateEditing(event, element, !this.props.editing)
           }
-          sections={this.props.sections}
           onMouseDown={(event, element) => {
             event.stopPropagation();
             this.props.selectElement(element);
           }}
         />
         <FooterEdit
-          footer={this.props.footer}
-          onMouseDown={event => {
+          onMouseDown={(event, section) => {
             event.stopPropagation();
-            this.props.selectElement(this.props.footer);
+            this.props.selectElement(section);
           }}
           onDoubleClick={(event, element) =>
             this.props.updateEditing(event, element, !this.props.editing)
@@ -56,10 +53,9 @@ class BodyLab extends Component {
     ) : (
       <div className="art-board" style={style}>
         <HeaderReArrange
-          header={this.props.header}
-          onMouseDown={event => {
+          onMouseDown={(event, section) => {
             event.stopPropagation();
-            this.props.selectElement(this.props.header);
+            this.props.selectElement(section);
           }}
         />
         <MainReArrange
@@ -71,16 +67,16 @@ class BodyLab extends Component {
             this.props.selectElement(element);
           }}
           onClick={(event, element) => {
+            // debugger;
             event.stopPropagation();
             this.props.selectElement(element);
           }}
         />
 
         <FooterReArrange
-          footer={this.props.footer}
-          onMouseDown={event => {
+          onMouseDown={(event, section) => {
             event.stopPropagation();
-            this.props.selectElement(this.props.footer);
+            this.props.selectElement(section);
           }}
         />
       </div>
@@ -89,10 +85,8 @@ class BodyLab extends Component {
 }
 
 const mapStateToProps = state => ({
-  header: state.activeSite.header,
-  footer: state.activeSite.footer,
-  activeElement: state.activeElement,
-  editing: state.editing
+  editing: state.editing,
+  body: state.activeSite.body
 });
 
 export default connect(mapStateToProps, actions)(BodyLab);

@@ -2,8 +2,23 @@ import React, { Component } from "react";
 import * as actions from "./actions";
 import { connect } from "react-redux";
 import { Editor } from "draft-js";
+import { CirclePicker } from "react-color";
+import { COLORS } from "./Colors";
 
 class HeaderEdit extends Component {
+  constructor() {
+    super();
+    this.state = {
+      files: [],
+      displayColorPicker: false,
+      pickerLeft: null,
+      pickerTop: null
+    };
+  }
+  handleChangeComplete = color => {
+    console.log(color);
+  };
+
   onChange = (editorState, element) => {
     let key;
     if (element) {
@@ -17,7 +32,31 @@ class HeaderEdit extends Component {
     this.setState({ value: editorState });
   };
 
+  handleDoubleClick = event => {
+    this.setState({
+      pickerLeft: event.pageX - 25,
+      pickerTop: event.pageY - 100,
+      displayColorPicker: !this.state.displayColorPicker
+    });
+  };
   render() {
+    const colorPicker = (
+      <div
+        style={{
+          position: "absolute",
+          left: this.state.pickerLeft,
+          top: this.state.pickerTop
+        }}
+      >
+        <CirclePicker
+          colors={COLORS}
+          width={150}
+          circleSize={14}
+          circleSpacing={7}
+          onChangeComplete={this.handleChangeComplete}
+        />
+      </div>
+    );
     let { header_style } = this.props.header;
     let style = {};
     let elementStyleSansBorders = {};
@@ -32,7 +71,12 @@ class HeaderEdit extends Component {
       }
     }
     return (
-      <header style={style}>
+      <header
+        style={style}
+        onMouseDown={event => this.props.onMouseDown(event, this.props.header)}
+        onDoubleClick={this.handleDoubleClick}
+      >
+        {this.state.displayColorPicker ? colorPicker : null}
         <h1
           style={elementStyleSansBorders}
           onDoubleClick={event =>
@@ -53,7 +97,8 @@ class HeaderEdit extends Component {
 }
 
 const mapStateToProps = state => ({
-  activeElement: state.activeElement
+  activeElement: state.activeElement,
+  header: state.activeSite.header
 });
 
 export default connect(mapStateToProps, actions)(HeaderEdit);

@@ -2,8 +2,23 @@ import React, { Component } from "react";
 import * as actions from "./actions";
 import { connect } from "react-redux";
 import { Editor } from "draft-js";
+import { CirclePicker } from "react-color";
+import { COLORS } from "./Colors";
 
 class FooterEdit extends Component {
+  constructor() {
+    super();
+    this.state = {
+      files: [],
+      displayColorPicker: false,
+      pickerLeft: null,
+      pickerTop: null
+    };
+  }
+  handleChangeComplete = color => {
+    console.log(color);
+  };
+
   onChange = (editorState, element) => {
     let key;
     if (element) {
@@ -17,7 +32,31 @@ class FooterEdit extends Component {
     this.setState({ value: editorState });
   };
 
+  handleDoubleClick = event => {
+    this.setState({
+      pickerLeft: event.pageX - 25,
+      pickerTop: event.pageY - 100,
+      displayColorPicker: !this.state.displayColorPicker
+    });
+  };
   render() {
+    const colorPicker = (
+      <div
+        style={{
+          position: "absolute",
+          left: this.state.pickerLeft,
+          top: this.state.pickerTop
+        }}
+      >
+        <CirclePicker
+          colors={COLORS}
+          width={150}
+          circleSize={14}
+          circleSpacing={7}
+          onChangeComplete={this.handleChangeComplete}
+        />
+      </div>
+    );
     let { footer_style } = this.props.footer;
     let style = {};
     let elementStyleSansBorders = {};
@@ -32,7 +71,12 @@ class FooterEdit extends Component {
       }
     }
     return (
-      <footer style={style}>
+      <footer
+        style={style}
+        onMouseDown={event => this.props.onMouseDown(event, this.props.footer)}
+        onDoubleClick={this.handleDoubleClick}
+      >
+        {this.state.displayColorPicker ? colorPicker : null}
         <h5
           style={elementStyleSansBorders}
           onDoubleClick={event =>
@@ -53,7 +97,8 @@ class FooterEdit extends Component {
 }
 
 const mapStateToProps = state => ({
-  activeElement: state.activeElement
+  activeElement: state.activeElement,
+  footer: state.activeSite.footer
 });
 
 export default connect(mapStateToProps, actions)(FooterEdit);

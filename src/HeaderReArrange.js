@@ -1,8 +1,49 @@
 import React, { Component } from "react";
 import draftToHtml from "draftjs-to-html";
+import { CirclePicker } from "react-color";
+import { connect } from "react-redux";
+
+import { COLORS } from "./Colors";
 
 class HeaderReArrange extends Component {
+  constructor() {
+    super();
+    this.state = {
+      files: [],
+      displayColorPicker: false,
+      pickerLeft: null,
+      pickerTop: null
+    };
+  }
+  handleChangeComplete = color => {
+    console.log(color);
+  };
+
+  handleDoubleClick = event => {
+    this.setState({
+      pickerLeft: event.pageX - 25,
+      pickerTop: event.pageY - 100,
+      displayColorPicker: !this.state.displayColorPicker
+    });
+  };
   render() {
+    const colorPicker = (
+      <div
+        style={{
+          position: "absolute",
+          left: this.state.pickerLeft,
+          top: this.state.pickerTop
+        }}
+      >
+        <CirclePicker
+          colors={COLORS}
+          width={150}
+          circleSize={14}
+          circleSpacing={7}
+          onChangeComplete={this.handleChangeComplete}
+        />
+      </div>
+    );
     let { header_style } = this.props.header;
     let style = {};
     let elementStyleSansBorders = {};
@@ -17,13 +58,14 @@ class HeaderReArrange extends Component {
       }
     }
     return (
-      <header style={style}>
-        <h1
-          style={elementStyleSansBorders}
-          onMouseDown={event =>
-            this.props.onMouseDown(event, this.props.header)
-          }
-        >
+      <header
+        style={style}
+        onMouseDown={event => this.props.onMouseDown(event, this.props.header)}
+        onDoubleClick={this.handleDoubleClick}
+      >
+        {this.state.displayColorPicker ? colorPicker : null}
+
+        <h1 style={elementStyleSansBorders}>
           <span
             dangerouslySetInnerHTML={{
               __html: draftToHtml(JSON.parse(this.props.header.inner_text))
@@ -35,4 +77,9 @@ class HeaderReArrange extends Component {
   }
 }
 
-export default HeaderReArrange;
+const mapStateToProps = state => ({
+  activeElement: state.activeElement,
+  header: state.activeSite.header
+});
+
+export default connect(mapStateToProps, null)(HeaderReArrange);
