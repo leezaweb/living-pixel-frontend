@@ -33,6 +33,7 @@ class MainReArrange extends Component {
   }
 
   onLayoutChange = (layout, layouts) => {
+    console.log("in layoutchange");
     if (
       this.props.activeElement &&
       "element_style" in this.props.activeElement
@@ -147,8 +148,7 @@ class MainReArrange extends Component {
                     onLayoutChange={this.onLayoutChange}
                     layout={layout}
                     cols={12}
-                    width={870}
-                    rowHeight={200}
+                    width={800}
                     data-id={section.id}
                     className={`section-${section.id}`}
                   >
@@ -176,7 +176,161 @@ class MainReArrange extends Component {
                           elementStyleSansBorders[camelKey] = value;
                         }
                       }
-                      return element.tag === "img" ? (
+                      // debugger;
+                      return element.tag === "h2" ? (
+                        <div
+                          data-grid={{
+                            x: element.grid_column_start,
+                            y: element.grid_row_start,
+                            w:
+                              element.grid_column_end -
+                              element.grid_column_start,
+                            h: element.grid_row_end - element.grid_row_start
+                          }}
+                          style={elementStyle}
+                          key={element.id.toString()}
+                          onDoubleClick={(event, element) =>
+                            this.props.onDoubleClick(event, element)
+                          }
+                          onMouseDown={event =>
+                            this.props.onMouseDown(event, element)
+                          }
+                          onClick={event =>
+                            this.props.onMouseDown(event, element)
+                          }
+                        >
+                          {this.props.activeElement &&
+                          this.props.activeElement.id === element.id ? (
+                            <span className="clone-delete">
+                              <span
+                                className="icon-left fa fa-trash remove"
+                                onMouseDown={this.onRemoveItem.bind(
+                                  this,
+                                  element
+                                )}
+                              />
+                              <span
+                                className="icon-left fa fa-clone copy"
+                                onMouseDown={this.onCloneItem.bind(
+                                  this,
+                                  element
+                                )}
+                              />
+                            </span>
+                          ) : null}
+
+                          <h2
+                            className="content"
+                            dangerouslySetInnerHTML={{
+                              __html: draftToHtml(
+                                JSON.parse(element.inner_text)
+                              )
+                            }}
+                          />
+                        </div>
+                      ) : element.tag === "h3" ? (
+                        <div
+                          data-grid={{
+                            x: element.grid_column_start,
+                            y: element.grid_row_start,
+                            w:
+                              element.grid_column_end -
+                              element.grid_column_start,
+                            h: element.grid_row_end - element.grid_row_start
+                          }}
+                          style={elementStyle}
+                          key={element.id.toString()}
+                          onDoubleClick={(event, element) =>
+                            this.props.onDoubleClick(event, element)
+                          }
+                          onMouseDown={event =>
+                            this.props.onMouseDown(event, element)
+                          }
+                          onClick={event =>
+                            this.props.onMouseDown(event, element)
+                          }
+                        >
+                          {this.props.activeElement &&
+                          this.props.activeElement.id === element.id ? (
+                            <span className="clone-delete">
+                              <span
+                                className="icon-left fa fa-trash remove"
+                                onMouseDown={this.onRemoveItem.bind(
+                                  this,
+                                  element
+                                )}
+                              />
+                              <span
+                                className="icon-left fa fa-clone copy"
+                                onMouseDown={this.onCloneItem.bind(
+                                  this,
+                                  element
+                                )}
+                              />
+                            </span>
+                          ) : null}
+
+                          <h3
+                            className="content"
+                            dangerouslySetInnerHTML={{
+                              __html: draftToHtml(
+                                JSON.parse(element.inner_text)
+                              )
+                            }}
+                          />
+                        </div>
+                      ) : element.tag === "h4" ? (
+                        <div
+                          data-grid={{
+                            x: element.grid_column_start,
+                            y: element.grid_row_start,
+                            w:
+                              element.grid_column_end -
+                              element.grid_column_start,
+                            h: element.grid_row_end - element.grid_row_start
+                          }}
+                          style={elementStyle}
+                          key={element.id.toString()}
+                          onDoubleClick={(event, element) =>
+                            this.props.onDoubleClick(event, element)
+                          }
+                          onMouseDown={event =>
+                            this.props.onMouseDown(event, element)
+                          }
+                          onClick={event =>
+                            this.props.onMouseDown(event, element)
+                          }
+                        >
+                          {this.props.activeElement &&
+                          this.props.activeElement.id === element.id ? (
+                            <span className="clone-delete">
+                              <span
+                                className="icon-left fa fa-trash remove"
+                                onMouseDown={this.onRemoveItem.bind(
+                                  this,
+                                  element
+                                )}
+                              />
+                              <span
+                                className="icon-left fa fa-clone copy"
+                                onMouseDown={this.onCloneItem.bind(
+                                  this,
+                                  element
+                                )}
+                              />
+                            </span>
+                          ) : null}
+
+                          <h4
+                            className="content"
+                            dangerouslySetInnerHTML={{
+                              __html: draftToHtml(
+                                JSON.parse(element.inner_text)
+                              )
+                            }}
+                          />
+                        </div>
+                      ) : element.tag === "img" ? (
                         <div
                           key={element.id.toString()}
                           data-grid={{
@@ -198,14 +352,19 @@ class MainReArrange extends Component {
                             this.props.onMouseDown(event, element)
                           }
                         >
-                          <span
-                            className="icon-left fa fa-trash remove"
-                            onClick={this.onRemoveItem.bind(this, element)}
-                          />
-                          <span
-                            className="icon-left fa fa-clone copy"
-                            onClick={this.onCloneItem.bind(this, element)}
-                          />
+                          {this.props.activeElement &&
+                          this.props.activeElement.id === element.id ? (
+                            <span className="clone-delete">
+                              <span
+                                className="icon-left fa fa-trash remove"
+                                onClick={this.onRemoveItem.bind(this, element)}
+                              />
+                              <span
+                                className="icon-left fa fa-clone copy"
+                                onClick={this.onCloneItem.bind(this, element)}
+                              />
+                            </span>
+                          ) : null}
 
                           <img
                             className={`element section-${section.id}`}
@@ -242,14 +401,26 @@ class MainReArrange extends Component {
                             this.props.onMouseDown(event, element)
                           }
                         >
-                          <span
-                            className="icon-left fa fa-trash remove"
-                            onClick={this.onRemoveItem.bind(this, element)}
-                          />
-                          <span
-                            className="icon-left fa fa-clone copy"
-                            onClick={this.onCloneItem.bind(this, element)}
-                          />
+                          {this.props.activeElement &&
+                          this.props.activeElement.id === element.id ? (
+                            <span className="clone-delete">
+                              <span
+                                className="icon-left fa fa-trash remove"
+                                onMouseDown={this.onRemoveItem.bind(
+                                  this,
+                                  element
+                                )}
+                              />
+                              <span
+                                className="icon-left fa fa-clone copy"
+                                onMouseDown={this.onCloneItem.bind(
+                                  this,
+                                  element
+                                )}
+                              />
+                            </span>
+                          ) : null}
+
                           <div
                             className="content"
                             dangerouslySetInnerHTML={{

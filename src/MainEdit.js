@@ -84,6 +84,19 @@ class MainEdit extends Component {
     console.log(color);
   };
 
+  componentDidMount() {
+    let sections = [...document.querySelectorAll("section")];
+    sections.forEach(section => {
+      // let section = document.querySelector(s);
+      let id = section.dataset.id;
+      let allChildren = [...section.getElementsByTagName("*")];
+      allChildren.forEach(child => {
+        child.classList.add(`section-${id}`);
+        child.setAttribute("data-id", id);
+      });
+    });
+  }
+
   render() {
     const colorPicker = (
       <div
@@ -124,9 +137,11 @@ class MainEdit extends Component {
             return (
               <section
                 style={sectionStyle}
-                onClick={event => this.props.onMouseDown(event, section)}
                 onDoubleClick={this.handleDoubleClick}
                 key={section.id}
+                onDragOver={e => this.props.dragOver(e)}
+                data-id={section.id}
+                className={`section-${section.id}`}
               >
                 <div>
                   {section.elements.map(element => {
@@ -144,13 +159,174 @@ class MainEdit extends Component {
                       elementStyle[camelKey] = value;
                     }
 
-                    return element.tag === "img" ? (
+                    return element.tag === "h2" ? (
+                      <h2
+                        className="element"
+                        key={element.id.toString()}
+                        style={elementStyle}
+                        onDoubleClick={event =>
+                          this.props.onDoubleClick(event, element)
+                        }
+                        onMouseDown={event =>
+                          this.props.onMouseDown(event, element)
+                        }
+                      >
+                        <ul className="buttons">
+                          <li>
+                            <span>STYLE:</span>
+                          </li>
+                          <li>
+                            <button onClick={() => this.onBoldClick(element)}>
+                              Bold
+                            </button>
+                          </li>
+                          <li>
+                            <button onClick={() => this.onItalicClick(element)}>
+                              Italic
+                            </button>
+                          </li>
+                          <li>
+                            <button onClick={() => this.onCodeClick(element)}>
+                              Code
+                            </button>
+                          </li>
+                        </ul>
+                        {this.props.activeElement &&
+                        this.props.activeElement.id === element.id ? (
+                          <span className="clone-delete">
+                            <span
+                              className="icon-left fa fa-trash remove"
+                              onMouseDown={this.onRemoveItem.bind(
+                                this,
+                                element
+                              )}
+                            />
+                            <span
+                              className="icon-left fa fa-clone copy"
+                              onMouseDown={this.onCloneItem.bind(this, element)}
+                            />
+                          </span>
+                        ) : null}
+                        <Editor
+                          handleKeyCommand={this.handleKeyCommand}
+                          editorState={element.editorState}
+                          onChange={e => this.onChange(e, element)}
+                        />
+                      </h2>
+                    ) : element.tag === "h3" ? (
+                      <h3
+                        className="element"
+                        key={element.id.toString()}
+                        style={elementStyle}
+                        onDoubleClick={event =>
+                          this.props.onDoubleClick(event, element)
+                        }
+                        onMouseDown={event =>
+                          this.props.onMouseDown(event, element)
+                        }
+                      >
+                        <ul className="buttons">
+                          <li>
+                            <span>STYLE:</span>
+                          </li>
+                          <li>
+                            <button onClick={() => this.onBoldClick(element)}>
+                              Bold
+                            </button>
+                          </li>
+                          <li>
+                            <button onClick={() => this.onItalicClick(element)}>
+                              Italic
+                            </button>
+                          </li>
+                          <li>
+                            <button onClick={() => this.onCodeClick(element)}>
+                              Code
+                            </button>
+                          </li>
+                        </ul>
+                        {this.props.activeElement &&
+                        this.props.activeElement.id === element.id ? (
+                          <span className="clone-delete">
+                            <span
+                              className="icon-left fa fa-trash remove"
+                              onMouseDown={this.onRemoveItem.bind(
+                                this,
+                                element
+                              )}
+                            />
+                            <span
+                              className="icon-left fa fa-clone copy"
+                              onMouseDown={this.onCloneItem.bind(this, element)}
+                            />
+                          </span>
+                        ) : null}
+                        <Editor
+                          handleKeyCommand={this.handleKeyCommand}
+                          editorState={element.editorState}
+                          onChange={e => this.onChange(e, element)}
+                        />
+                      </h3>
+                    ) : element.tag === "h4" ? (
+                      <h4
+                        className="element"
+                        key={element.id.toString()}
+                        style={elementStyle}
+                        onDoubleClick={event =>
+                          this.props.onDoubleClick(event, element)
+                        }
+                        onMouseDown={event =>
+                          this.props.onMouseDown(event, element)
+                        }
+                      >
+                        <ul className="buttons">
+                          <li>
+                            <span>STYLE:</span>
+                          </li>
+                          <li>
+                            <button onClick={() => this.onBoldClick(element)}>
+                              Bold
+                            </button>
+                          </li>
+                          <li>
+                            <button onClick={() => this.onItalicClick(element)}>
+                              Italic
+                            </button>
+                          </li>
+                          <li>
+                            <button onClick={() => this.onCodeClick(element)}>
+                              Code
+                            </button>
+                          </li>
+                        </ul>
+                        {this.props.activeElement &&
+                        this.props.activeElement.id === element.id ? (
+                          <span className="clone-delete">
+                            <span
+                              className="icon-left fa fa-trash remove"
+                              onMouseDown={this.onRemoveItem.bind(
+                                this,
+                                element
+                              )}
+                            />
+                            <span
+                              className="icon-left fa fa-clone copy"
+                              onMouseDown={this.onCloneItem.bind(this, element)}
+                            />
+                          </span>
+                        ) : null}
+                        <Editor
+                          handleKeyCommand={this.handleKeyCommand}
+                          editorState={element.editorState}
+                          onChange={e => this.onChange(e, element)}
+                        />
+                      </h4>
+                    ) : element.tag === "img" ? (
                       <div
                         key={element.id.toString()}
                         style={{
                           ...elementStyle,
-                          position: "relative",
-                          overflow: "hidden"
+                          position: "relative"
                         }}
                         onDoubleClick={event =>
                           this.props.onDoubleClick(event, element)
@@ -159,6 +335,22 @@ class MainEdit extends Component {
                           this.props.onMouseDown(event, element)
                         }
                       >
+                        {this.props.activeElement &&
+                        this.props.activeElement.id === element.id ? (
+                          <span className="clone-delete">
+                            <span
+                              className="icon-left fa fa-trash remove"
+                              onMouseDown={this.onRemoveItem.bind(
+                                this,
+                                element
+                              )}
+                            />
+                            <span
+                              className="icon-left fa fa-clone copy"
+                              onMouseDown={this.onCloneItem.bind(this, element)}
+                            />
+                          </span>
+                        ) : null}
                         <img className="element" src={element.src} alt="" />
                         <Dropzone
                           onDrop={this.onDrop.bind(this)}
@@ -199,15 +391,22 @@ class MainEdit extends Component {
                             </button>
                           </li>
                         </ul>
-
-                        <span
-                          className="icon-left fa fa-trash remove"
-                          onClick={this.onRemoveItem.bind(this, element)}
-                        />
-                        <span
-                          className="icon-left fa fa-clone copy"
-                          onClick={this.onCloneItem.bind(this, element)}
-                        />
+                        {this.props.activeElement &&
+                        this.props.activeElement.id === element.id ? (
+                          <span className="clone-delete">
+                            <span
+                              className="icon-left fa fa-trash remove"
+                              onMouseDown={this.onRemoveItem.bind(
+                                this,
+                                element
+                              )}
+                            />
+                            <span
+                              className="icon-left fa fa-clone copy"
+                              onMouseDown={this.onCloneItem.bind(this, element)}
+                            />
+                          </span>
+                        ) : null}
                         <Editor
                           handleKeyCommand={this.handleKeyCommand}
                           editorState={element.editorState}

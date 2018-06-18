@@ -14,7 +14,7 @@ class ArtBoard extends Component {
 
   render() {
     return (
-      <main>
+      <div>
         <Menu />
         {this.props.loading ? (
           <ProgressSpinner />
@@ -48,12 +48,14 @@ class ArtBoard extends Component {
                   {" • "}
                 </span>
               )}
-              <Link to={"/page-cast"}>Preview</Link>
+              <Link to={"/page-cast"} target="blank">
+                Preview
+              </Link>
             </div>
             <BodyLab />
           </Page>
         )}
-      </main>
+      </div>
     );
   }
 }

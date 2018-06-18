@@ -4,18 +4,26 @@ import { connect } from "react-redux";
 
 class Organism extends Component {
   render() {
+    console.log(this.props);
     return (
       <div
         className="box"
-        data-id={"i am a hero image with caption"}
-        draggable="true"
-        onDragEnd={e => this.props.dragEnd(e)}
-        onDragStart={e => this.props.dragStart(e)}
+        data-id={this.props.title}
+        data-type={"organism"}
+        data-site={this.props.activeSiteId}
       >
-        <i className="fa fa-object-ungroup" />Organism
+        <span className="child">
+          <i className="fa fa-object-ungroup" />
+          <br />
+          {this.props.title}
+        </span>
       </div>
     );
   }
 }
 
-export default connect(null, actions)(Organism);
+const mapStateToProps = state => ({
+  activeSiteId: state.activeSite.id
+});
+
+export default connect(mapStateToProps, actions)(Organism);

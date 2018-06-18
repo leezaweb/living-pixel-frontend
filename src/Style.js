@@ -77,7 +77,7 @@ class Style extends Component {
                 <span>{`${k[0].replace(/_/g, " ")}`}:</span>
                 <br />
                 <input
-                  style={{ width: 100 }}
+                  style={{ width: 80 }}
                   type="number"
                   defaultValue={this.props.activeElement[key][k[0]]}
                   name={k[0]}
@@ -150,6 +150,7 @@ class Style extends Component {
                     {BORDERS.map(border => {
                       return (
                         <option
+                          key={border}
                           style={{
                             backgroundColor: "#d4d4d4",
                             borderStyle: border,
@@ -189,6 +190,7 @@ class Style extends Component {
                   >
                     {FILTERS.map(filter => (
                       <option
+                        key={filter}
                         style={{
                           outline: "1px solid #444",
                           backdropFilter: filter
@@ -221,6 +223,7 @@ class Style extends Component {
                   >
                     {ALIGN.map(align => (
                       <option
+                        key={align}
                         style={{
                           textAlign: align
                         }}
@@ -252,6 +255,7 @@ class Style extends Component {
                   >
                     {BACK_REPEAT.map(repeat => (
                       <option
+                        key={repeat}
                         style={{
                           backgroundImage:
                             "url('https://www.w3schools.com/css/img_tree.gif')",
@@ -286,6 +290,7 @@ class Style extends Component {
                   >
                     {BACK_SIZE.map(size => (
                       <option
+                        key={size}
                         style={{
                           backgroundImage:
                             "url('https://www.w3schools.com/css/img_tree.gif')",
@@ -324,6 +329,7 @@ class Style extends Component {
                       );
                       return (
                         <option
+                          key={a}
                           defaultValue={[this.props.activeElement[key][k[0]]]}
                           style={{
                             background: attach
@@ -342,7 +348,7 @@ class Style extends Component {
                   <br />
                   <input
                     type="text"
-                    size="5"
+                    size="3"
                     defaultValue={this.props.activeElement[key][k[0]]}
                     name={k[0]}
                     onChange={event => {
@@ -365,7 +371,19 @@ class Style extends Component {
       );
     }
 
-    return <form className="styleForm">{labelsFields}</form>;
+    return (
+      <div>
+        <form className="styleForm">{labelsFields}</form>
+        {this.props.activeElement.tag === "img" ? (
+          <label>
+            <span>
+              IMAGE <br />URL
+            </span>
+            <input type="text" size="25" style={{ fontSize: "1.8em" }} />
+          </label>
+        ) : null}
+      </div>
+    );
   }
 }
 

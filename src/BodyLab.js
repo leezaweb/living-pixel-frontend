@@ -24,7 +24,6 @@ class BodyLab extends Component {
       <div className="art-board" style={style}>
         <HeaderEdit
           onMouseDown={(event, section) => {
-            event.stopPropagation();
             this.props.selectElement(section);
           }}
           onDoubleClick={(event, element) =>
@@ -32,9 +31,9 @@ class BodyLab extends Component {
           }
         />
         <MainEdit
-          onDoubleClick={(event, element) =>
-            this.props.updateEditing(event, element, !this.props.editing)
-          }
+          onDoubleClick={(event, element) => {
+            /*this.props.updateEditing(event, element, !this.props.editing)*/
+          }}
           onMouseDown={(event, element) => {
             event.stopPropagation();
             this.props.selectElement(element);
@@ -42,26 +41,24 @@ class BodyLab extends Component {
         />
         <FooterEdit
           onMouseDown={(event, section) => {
-            event.stopPropagation();
             this.props.selectElement(section);
           }}
-          onDoubleClick={(event, element) =>
-            this.props.updateEditing(event, element, !this.props.editing)
-          }
+          onDoubleClick={(event, element) => {
+            this.props.updateEditing(event, element, !this.props.editing);
+          }}
         />
       </div>
     ) : (
       <div className="art-board" style={style}>
         <HeaderReArrange
           onMouseDown={(event, section) => {
-            event.stopPropagation();
             this.props.selectElement(section);
           }}
         />
         <MainReArrange
-          onDoubleClick={(event, element) =>
-            this.props.updateEditing(event, element, !this.props.editing)
-          }
+          onDoubleClick={(event, element) => {
+            /*this.props.updateEditing(event, element, !this.props.editing)*/
+          }}
           onMouseDown={(event, element) => {
             event.stopPropagation();
             this.props.selectElement(element);
@@ -75,7 +72,6 @@ class BodyLab extends Component {
 
         <FooterReArrange
           onMouseDown={(event, section) => {
-            event.stopPropagation();
             this.props.selectElement(section);
           }}
         />

@@ -1,4 +1,62 @@
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+const SECTION_URL = "http://localhost:3000/api/v1/sections";
+const ELEMENT_URL = `http://localhost:3000/api/v1/elements`;
+
+export const dragEnd = e => {
+  const thunk = dispatch => {
+    console.log("end");
+    this.dragged.style.opacity = "1";
+    let data;
+    if (this.over) {
+      switch (this.dragged.dataset.type) {
+        case "molecule":
+          data = {
+            section: this.over.dataset.id,
+            site: this.dragged.dataset.site,
+            key: this.dragged.dataset.id
+          };
+
+          fetch(SECTION_URL, {
+            body: JSON.stringify(data),
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            },
+            method: "POST"
+          }).then(resp => console.log(resp));
+          break;
+        case "atom":
+          // debugger;
+          console.log(this.dragged.dataset);
+          data = {
+            section: this.over.dataset.id,
+            site: this.dragged.dataset.site,
+            key: this.dragged.dataset.id
+          };
+
+          fetch(ELEMENT_URL, {
+            body: JSON.stringify(data),
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            },
+            method: "POST"
+          }).then(resp => console.log(resp));
+          break;
+        default:
+      }
+      alert(
+        `"${this.dragged.dataset.id}" dragged over Section ${
+          this.over.dataset.id
+        }`
+      );
+
+      console.log(this.dragged.dataset.id);
+      console.log(this.over.dataset.id);
+    }
+  };
+  return thunk;
+};
 
 export const dragStart = e => {
   const thunk = dispatch => {
@@ -10,22 +68,6 @@ export const dragStart = e => {
   };
   return thunk;
 };
-
-export const dragEnd = e => {
-  const thunk = dispatch => {
-    console.log("end");
-    this.dragged.style.opacity = "1";
-    alert(
-      `"${this.dragged.dataset.id}" dragged over Section ${
-        this.over.dataset.id
-      }`
-    );
-    console.log(this.dragged.dataset.id);
-    console.log(this.over.dataset.id);
-  };
-  return thunk;
-};
-
 export const dragOver = e => {
   const thunk = dispatch => {
     console.log("over");
@@ -38,7 +80,7 @@ export const dragOver = e => {
     if (bool) {
       this.over = e.target;
       dragEnd(e);
-      return;
+      // return;
     }
     console.log(e.target.tagName);
 
@@ -83,6 +125,7 @@ const sitesFetcher = dispatch => {
     .then(json => {
       dispatch(
         updateSites({
+          id: json.id,
           version: json.version,
           url: json.url,
           title: json.title,
@@ -165,10 +208,9 @@ export const cloneElement = object => {
 };
 
 const elementCloner = (dispatch, object) => {
-  const ELEMENT_URL = `http://localhost:3000/api/v1/elements`;
-
   let data = {
-    id: object.element.id
+    id: object.element.id,
+    key: "clone"
   };
   console.log("gonna clone");
 
@@ -283,20 +325,6 @@ const fetchToStyle = (object, data, id, dispatch) => {
         })
         .then(json => {
           dispatch(updateSite(siteWithEditors(json)));
-
-          let elements = [].concat.apply(
-            [],
-            json.sections.map(section => section.elements)
-          );
-
-          let updatedElement = elements.find(
-            element => element.id === object.element.id
-          );
-          // console.log(
-          //   "gonna select",
-          //   updatedElement.element_style.grid_column_end
-          // );
-          selectElement(updatedElement);
         })
     );
 };
@@ -315,8 +343,7 @@ export const deleteElement = object => {
 };
 
 const elementDeleter = (dispatch, object) => {
-  debugger;
-  const ELEMENT_URL = `http://localhost:3000/api/v1/elements/`;
+  const ELEMENT_URL = `http://localhost:3000/api/v1/elements`;
 
   let id = object.element.id;
 
@@ -345,7 +372,6 @@ const elementDeleter = (dispatch, object) => {
 };
 
 export function selectElement(element) {
-  console.log("in selectElement");
   return {
     type: "SELECT_ELEMENT",
     element
@@ -368,6 +394,7 @@ export function updateEditing(event, element, editing) {
 
 const siteWithEditors = json => {
   return {
+    id: json.id,
     version: json.version,
     url: json.url,
     title: json.title,

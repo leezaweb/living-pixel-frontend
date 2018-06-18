@@ -1,20 +1,44 @@
+section {
+  min-height: 225px;
+}
 main:not(.re-arranging) > section > div {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-auto-rows: 200px;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: minmax(50px, max-content);
 }
 .page-cast section,
 .page-lab section > div {
   padding: 12px;
 }
 
+.re-arranging img.element {
+  top: 50%;
+}
+
+.page-cast img.element {
+  /* top: 50%; */
+  transform: translate(-50%, 0%);
+}
 img.element {
+  position: absolute;
+  /* top: 50%; */
+  left: 50%;
+}
+
+.editing img.element {
+  transform: translate(-50%, 0%);
+  width: 50%;
+  height: auto;
+}
+.re-arranging img.element {
+  transform: translate(-50%, -50%);
   width: auto;
   height: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+}
+
+.page-cast img.element {
+  width: auto;
+  height: 100%;
 }
 
 h1 {
@@ -63,24 +87,35 @@ a {
 }
 
 .remove {
+  position: absolute;
   right: 33px;
 }
 .copy {
+  position: absolute;
   right: 3px;
 }
 
-.page-lab .art-board span.fa {
+.page-lab .art-board span.clone-delete {
   position: absolute;
   top: -24px;
   font-size: 24px;
+  right: 0;
 }
 
 .page-lab .art-board img + div {
-  top: 18px;
   left: 18px;
   position: relative;
   font-size: 42px !important;
 }
+
+.re-arranging img + div {
+  top: 18px;
+}
+
+.editing img + div {
+  top: -50%;
+}
+
 .fa {
   color: #444;
 }
@@ -116,9 +151,11 @@ select:focus {
 }
 select:not(.selectColor) {
   padding-top: 6px;
+  width: 80px;
 }
 select.selectColor {
   padding-top: 9px;
+  width: 80px;
 }
 
 .selectColor {
@@ -136,6 +173,7 @@ label > span {
   font-variant: small-caps;
   color: #444;
   display: block;
+  font-size: 12px;
 }
 .page-lab option,
 .page-lab section > * > * {
@@ -195,7 +233,7 @@ select:not(.selectColor) option {
 }
 .page-lab {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 450px;
   grid-gap: 36px;
 }
 
@@ -204,7 +242,7 @@ select:not(.selectColor) option {
   margin: auto;
 } */
 
-section > div {
+.page-cast section > div {
   width: 960px;
   margin: auto;
 }
@@ -221,6 +259,7 @@ section > div {
   -webkit-flex-wrap: wrap;
   justify-content: center;
   flex-wrap: wrap;
+  transform: scaleY(-1);
 }
 
 .ui-tabview .ui-tabview-panel {
@@ -239,8 +278,19 @@ section > div {
   text-align: center;
   margin: 5px;
   width: 45%;
-  padding-top: calc(24% - 0.5em);
-  padding-bottom: calc(24% - 0.5em);
+  /* padding-top: calc(24% - 0.5em);
+  padding-bottom: calc(24% - 0.5em); */
+  min-height: 250px;
+  font-size: 1.4vw;
+  flex-grow: 1;
+  transform: scaleY(-1);
+}
+
+.box .child {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .ui-tabview-panel > .tile > div:before {

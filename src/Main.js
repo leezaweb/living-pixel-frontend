@@ -55,7 +55,46 @@ class Main extends Component {
                       }
                     }
 
-                    return element.tag === "img" ? (
+                    return element.tag === "h2" ? (
+                      <h2
+                        className="element"
+                        style={elementStyle}
+                        key={element.id.toString()}
+                      >
+                        <span
+                          style={elementStyleSansBorders}
+                          dangerouslySetInnerHTML={{
+                            __html: draftToHtml(JSON.parse(element.inner_text))
+                          }}
+                        />
+                      </h2>
+                    ) : element.tag === "h3" ? (
+                      <h3
+                        className="element"
+                        style={elementStyle}
+                        key={element.id.toString()}
+                      >
+                        <span
+                          style={elementStyleSansBorders}
+                          dangerouslySetInnerHTML={{
+                            __html: draftToHtml(JSON.parse(element.inner_text))
+                          }}
+                        />
+                      </h3>
+                    ) : element.tag === "h4" ? (
+                      <h4
+                        className="element"
+                        style={elementStyle}
+                        key={element.id.toString()}
+                      >
+                        <span
+                          style={elementStyleSansBorders}
+                          dangerouslySetInnerHTML={{
+                            __html: draftToHtml(JSON.parse(element.inner_text))
+                          }}
+                        />
+                      </h4>
+                    ) : element.tag === "img" ? (
                       <div
                         key={element.id.toString()}
                         style={{
