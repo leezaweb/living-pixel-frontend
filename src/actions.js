@@ -1,6 +1,20 @@
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 const SECTION_URL = "http://localhost:3000/api/v1/sections";
 const ELEMENT_URL = `http://localhost:3000/api/v1/elements`;
+const SITE_URL = `http://localhost:3000/api/v1/sites`;
+
+export const handleChangeComplete = (color, element) => {
+  let key = Object.keys(element).find(key => key.includes("_style"));
+  const thunk = dispatch => {
+    elementUpdator(dispatch, {
+      key: key,
+      background_color: color.hex,
+      element: element
+    });
+  };
+  [...document.querySelectorAll(".circle-picker")].forEach(cp => cp.remove());
+  return thunk;
+};
 
 export const dragEnd = e => {
   const thunk = dispatch => {
@@ -23,10 +37,17 @@ export const dragEnd = e => {
               "Content-Type": "application/json"
             },
             method: "POST"
-          }).then(resp => console.log(resp));
+          })
+            .then(resp => console.log(resp))
+            .then(() =>
+              fetch(`${SITE_URL}/1`)
+                .then(resp => resp.json())
+                .then(json => {
+                  dispatch(updateSite(siteWithEditors(json)));
+                })
+            );
           break;
         case "atom":
-          // debugger;
           console.log(this.dragged.dataset);
           data = {
             section: this.over.dataset.id,
@@ -41,11 +62,19 @@ export const dragEnd = e => {
               "Content-Type": "application/json"
             },
             method: "POST"
-          }).then(resp => console.log(resp));
+          })
+            .then(resp => console.log(resp))
+            .then(() =>
+              fetch(`${SITE_URL}/1`)
+                .then(resp => resp.json())
+                .then(json => {
+                  dispatch(updateSite(siteWithEditors(json)));
+                })
+            );
           break;
         default:
       }
-      alert(
+      console.log(
         `"${this.dragged.dataset.id}" dragged over Section ${
           this.over.dataset.id
         }`
@@ -63,8 +92,6 @@ export const dragStart = e => {
     console.log("start");
     this.dragged = e.currentTarget;
     this.dragged.style.opacity = "0.5";
-    // e.dataTransfer.effectAllowed = "move";
-    // e.dataTransfer.setData("text/html", e.currentTarget);
   };
   return thunk;
 };
@@ -72,7 +99,6 @@ export const dragOver = e => {
   const thunk = dispatch => {
     console.log("over");
     e.preventDefault();
-    // this.dragged.style.display = "none";
     let classList = [...e.target.classList];
     let bool = classList.find(c => c.includes("section-"));
     console.log(bool);
@@ -80,7 +106,6 @@ export const dragOver = e => {
     if (bool) {
       this.over = e.target;
       dragEnd(e);
-      // return;
     }
     console.log(e.target.tagName);
 
@@ -89,8 +114,6 @@ export const dragOver = e => {
   };
   return thunk;
 };
-
-const SITE_URL = "http://localhost:3000/api/v1/sites";
 
 const mapSectionsToEditors = json => {
   return json.sections.map(section => {
@@ -152,11 +175,13 @@ const sitesFetcher = dispatch => {
 export function updateSites(sites) {
   return { type: "UPDATE_SITES", sites };
 }
+export function updateSite(site) {
+  return { type: "UPDATE_SITE", site };
+}
 
 export const fetchSites = () => {
   const thunk = dispatch => {
     sitesFetcher(dispatch);
-    dispatch({ type: "FETCH_SITES" });
   };
 
   return thunk;
@@ -174,33 +199,51 @@ export function deleteSite() {
   };
 }
 
-export function updateSite(site) {
-  return { type: "UPDATE_SITE", site };
-}
-
 export function fetchSite() {
   const thunk = dispatch => {
     siteFetcher(dispatch);
-
-    dispatch({ type: "FETCH_SITES" });
   };
 
   return thunk;
 }
 
-export function addElement() {
-  return {
-    type: "ADD_ELEMENT"
+export const cloneOrganism = object => {
+  const thunk = dispatch => {
+    organismCloner(dispatch, object);
   };
-}
+
+  return thunk;
+};
+
+const organismCloner = (dispatch, object) => {
+  let data = {
+    site: object.site,
+    key: object.key
+  };
+  console.log("gonna clone template");
+
+  fetch(`${SITE_URL}`, {
+    body: JSON.stringify(data),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    method: "POST"
+  })
+    .then(resp => console.log(resp))
+    .then(() =>
+      fetch(`${SITE_URL}/1`)
+        .then(resp => {
+          return resp.json();
+        })
+        .then(json => {
+          dispatch(updateSite(siteWithEditors(json)));
+        })
+    );
+};
 
 export const cloneElement = object => {
   const thunk = dispatch => {
-    // dispatch({
-    //   type: "CLONE_ELEMENT",
-    //   element: object.element
-    // });
-
     elementCloner(dispatch, object);
   };
 
@@ -223,7 +266,7 @@ const elementCloner = (dispatch, object) => {
     method: "POST"
   })
     .then(resp => console.log(resp))
-    .then(
+    .then(() =>
       fetch(`${SITE_URL}/1`)
         .then(resp => {
           return resp.json();
@@ -254,7 +297,6 @@ const elementUpdator = (dispatch, object) => {
   let data;
 
   if ("editorState" in object) {
-    // console.log(object.editorState.getCurrentContent().getPlainText());
     data = {
       id: object.id,
       inner_text: JSON.stringify(
@@ -263,6 +305,29 @@ const elementUpdator = (dispatch, object) => {
     };
 
     fetchToElement(object, data, object.element.id, dispatch);
+  } else if ("src" in object) {
+    object.key = "element";
+    data = {
+      element: object.element,
+      src: object.src
+    };
+
+    fetchToElement(object, data, object.element.id, dispatch);
+  } else if ("background_image" in object) {
+    object.key = "section";
+    data = {
+      element: object.element,
+      background_image: object.background_image
+    };
+
+    fetchToElement(object, data, object.element.id, dispatch);
+  } else if ("background_color" in object) {
+    id = object.element[object.key].id;
+    data = {
+      background_color: object.background_color
+    };
+
+    fetchToStyle(object, data, id, dispatch);
   } else {
     if ("value" in object) {
       id = object.element[object.key].id;
@@ -299,7 +364,7 @@ const fetchToElement = (object, data, id, dispatch) => {
     method: "PATCH"
   })
     .then(resp => console.log(resp))
-    .then(
+    .then(() =>
       fetch(`${SITE_URL}/1`).then(resp => {
         return resp.json();
       })
@@ -318,7 +383,7 @@ const fetchToStyle = (object, data, id, dispatch) => {
     method: "PATCH"
   })
     .then(resp => console.log(resp))
-    .then(
+    .then(() =>
       fetch(`${SITE_URL}/1`)
         .then(resp => {
           return resp.json();
@@ -331,11 +396,6 @@ const fetchToStyle = (object, data, id, dispatch) => {
 
 export const deleteElement = object => {
   const thunk = dispatch => {
-    // dispatch({
-    //   type: "DELETE_ELEMENT",
-    //   payload: {element: object.element }
-    // });
-
     elementDeleter(dispatch, object);
   };
 
@@ -360,7 +420,7 @@ const elementDeleter = (dispatch, object) => {
     method: "DELETE"
   })
     .then(resp => console.log(resp))
-    .then(
+    .then(() =>
       fetch(`${SITE_URL}/1`)
         .then(resp => {
           return resp.json();
@@ -385,13 +445,6 @@ export function updateEditing(event, element, editing) {
   };
 }
 
-// editorState: EditorState.createWithContent(
-//   convertFromRaw(element.inner_text)
-// )
-// editorState: EditorState.createWithContent(
-//   ContentState.createFromText(element.inner_text)
-// )
-
 const siteWithEditors = json => {
   return {
     id: json.id,
@@ -415,3 +468,14 @@ const siteWithEditors = json => {
     }
   };
 };
+
+// editorState: EditorState.createWithContent(
+//   convertFromRaw(element.inner_text)
+// )
+// editorState: EditorState.createWithContent(
+//   ContentState.createFromText(element.inner_text)
+// )
+// console.log(object.editorState.getCurrentContent().getPlainText());
+
+// e.dataTransfer.effectAllowed = "move";
+// e.dataTransfer.setData("text/html", e.currentTarget);

@@ -17,23 +17,26 @@ class MainReArrange extends Component {
       pickerTop: null
     };
   }
-
-  handleChangeComplete = color => {
-    console.log(color);
+  _crop = () => {
+    const dataUrl = this.refs.cropper.getCroppedCanvas().toDataURL();
+    console.log(dataUrl);
   };
 
-  onDrop(files) {
-    console.log(files);
-    this.setState(
-      {
-        files
-      },
-      () => console.log(this.state)
-    );
+  onDrop(file, element) {
+    if (file) {
+      var self = this;
+      var reader = new FileReader();
+      reader.readAsDataURL(file[0]);
+      reader.onload = () => {
+        self.props.updateElement({
+          element: element,
+          src: reader.result
+        });
+      };
+    }
   }
 
   onLayoutChange = (layout, layouts) => {
-    console.log("in layoutchange");
     if (
       this.props.activeElement &&
       "element_style" in this.props.activeElement
@@ -84,6 +87,8 @@ class MainReArrange extends Component {
   };
 
   render() {
+    console.log("new main", this.props.sections);
+
     const colorPicker = (
       <div
         style={{
@@ -97,7 +102,9 @@ class MainReArrange extends Component {
           width={150}
           circleSize={14}
           circleSpacing={7}
-          onChangeComplete={this.handleChangeComplete}
+          onChangeComplete={event =>
+            this.props.handleChangeComplete(event, this.props.activeElement)
+          }
         />
       </div>
     );
@@ -373,8 +380,11 @@ class MainReArrange extends Component {
                             alt=""
                           />
                           <Dropzone
-                            onDrop={this.onDrop.bind(this)}
+                            onDrop={event =>
+                              this.onDrop.bind(this)(event, element)
+                            }
                             style={{ border: "none" }}
+                            accept="image/jpeg, image/jpg, image/png, image/gif"
                           >
                             <i className="fa fa-upload" />
                           </Dropzone>
@@ -448,7 +458,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, actions)(MainReArrange);
-
-// let item = this.props.sections
-// .map(section => section.elements)
-// .find(item => item.i === this.props.activeElement.id);

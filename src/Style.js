@@ -4,12 +4,27 @@ import { connect } from "react-redux";
 import { COLORS } from "./Colors";
 class Style extends Component {
   handleChange = (key, name, value, element) => {
-    this.props.updateElement({
-      key: key,
-      name: name,
-      value: value,
-      element: element
-    });
+    // document.querySelector(".styleForm input[type=file]").files
+    // let file = this.fileUpload.files[0];
+    // debugger;
+    if (this.fileUpload) {
+      var self = this;
+      var reader = new FileReader();
+      reader.readAsDataURL(this.fileUpload.files[0]);
+      reader.onload = () => {
+        self.props.updateElement({
+          element: element,
+          background_image: reader.result
+        });
+      };
+    } else {
+      this.props.updateElement({
+        key: key,
+        name: name,
+        value: value,
+        element: element
+      });
+    }
   };
 
   handleHover = e => {
@@ -163,6 +178,27 @@ class Style extends Component {
                       );
                     })}
                   </select>
+                </label>
+              ) : k[0].includes("background_image") ? (
+                <label key={v}>
+                  <span>{`${k[0].replace(/_/g, " ")}`}:</span>
+                  <br />
+                  <input
+                    accept="image/*"
+                    type="file"
+                    defaultValue={""}
+                    name={k[0]}
+                    ref={ref => (this.fileUpload = ref)}
+                    onChange={event => {
+                      event.persist();
+                      this.handleChange(
+                        key,
+                        k[0],
+                        event.target.value,
+                        this.props.activeElement
+                      );
+                    }}
+                  />
                 </label>
               ) : k[0].includes("filter") ? (
                 <label key={v}>
@@ -374,14 +410,14 @@ class Style extends Component {
     return (
       <div>
         <form className="styleForm">{labelsFields}</form>
-        {this.props.activeElement.tag === "img" ? (
+        {/*this.props.activeElement.tag === "img" ? (
           <label>
             <span>
               IMAGE <br />URL
             </span>
             <input type="text" size="25" style={{ fontSize: "1.8em" }} />
           </label>
-        ) : null}
+        ) : null*/}
       </div>
     );
   }

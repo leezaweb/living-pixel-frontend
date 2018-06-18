@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "classnames": "^2.2.5",
+    "cropperjs": "^1.4.0",
     "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.4",
     "font-awesome": "^4.7.0",
@@ -11,6 +12,7 @@
     "primereact": "^1.6.0-rc.1",
     "react": "^16.4.0",
     "react-color": "^2.14.1",
+    "react-cropper": "^1.0.1",
     "react-css-grid": "^2.0.0-0",
     "react-dom": "^16.4.0",
     "react-draggable": "^3.0.5",
@@ -19,6 +21,7 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.0",
     "react-scripts": "1.1.4",
+    "react-spring": "^5.3.17",
     "react-transition-group": "^2.3.1",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",

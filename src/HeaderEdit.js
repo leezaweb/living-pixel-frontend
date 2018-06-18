@@ -15,9 +15,6 @@ class HeaderEdit extends Component {
       pickerTop: null
     };
   }
-  handleChangeComplete = color => {
-    console.log(color);
-  };
 
   onChange = (editorState, element) => {
     let key;
@@ -53,7 +50,9 @@ class HeaderEdit extends Component {
           width={150}
           circleSize={14}
           circleSpacing={7}
-          onChangeComplete={this.handleChangeComplete}
+          onChangeComplete={event =>
+            this.props.handleChangeComplete(event, this.props.activeElement)
+          }
         />
       </div>
     );

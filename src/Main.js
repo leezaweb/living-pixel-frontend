@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import * as actions from "./actions";
 import { connect } from "react-redux";
 import draftToHtml from "draftjs-to-html";
+import { Parallax } from "react-spring";
 
 class Main extends Component {
   render() {
@@ -99,7 +100,6 @@ class Main extends Component {
                         key={element.id.toString()}
                         style={{
                           ...elementStyle,
-                          position: "relative",
                           overflow: "hidden"
                         }}
                       >

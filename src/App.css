@@ -17,9 +17,11 @@ main:not(.re-arranging) > section > div {
 
 .page-cast img.element {
   /* top: 50%; */
-  transform: translate(-50%, 0%);
+  /* transform: translate(-50%, 0%); */
+  width: 100%;
+  height: auto;
 }
-img.element {
+.page-lab img.element {
   position: absolute;
   /* top: 50%; */
   left: 50%;
@@ -42,7 +44,7 @@ img.element {
 }
 
 h1 {
-  font-size: 5vw;
+  font-size: 3vw;
   line-height: 0.1;
 }
 h1,
@@ -260,11 +262,19 @@ select:not(.selectColor) option {
   justify-content: center;
   flex-wrap: wrap;
   transform: scaleY(-1);
+  transform: scaleX(-1);
 }
 
 .ui-tabview .ui-tabview-panel {
   /* padding-left: 0 !important;
   padding-right: 0 !important; */
+}
+.organisms .box {
+  cursor: pointer;
+}
+.atoms .box,
+.molecules .box {
+  cursor: grab;
 }
 .ui-tabview-panel > .tile > .box {
   border-color: #d5d5d5;
@@ -280,10 +290,15 @@ select:not(.selectColor) option {
   width: 45%;
   /* padding-top: calc(24% - 0.5em);
   padding-bottom: calc(24% - 0.5em); */
-  min-height: 250px;
-  font-size: 1.4vw;
+  min-height: 100px;
+  font-size: 1.2vw;
   flex-grow: 1;
   transform: scaleY(-1);
+  transform: scaleX(-1);
+}
+
+.ui-tabview-panel > .tile > .box:not(:last-child) {
+  min-height: 200px;
 }
 
 .box .child {

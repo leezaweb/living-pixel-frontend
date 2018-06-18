@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 
 class BodyLab extends Component {
   render() {
+    console.log("new body", this.props.body);
     let { body_style } = this.props.body;
     let style = {};
     for (const [key, value] of Object.entries(body_style)) {
@@ -86,5 +87,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, actions)(BodyLab);
-
-// export default connect(null, actions)(Body);

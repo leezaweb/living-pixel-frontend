@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import draftToHtml from "draftjs-to-html";
 import { CirclePicker } from "react-color";
 import { connect } from "react-redux";
+import * as actions from "./actions";
 
 import { COLORS } from "./Colors";
 
@@ -15,9 +16,6 @@ class HeaderReArrange extends Component {
       pickerTop: null
     };
   }
-  handleChangeComplete = color => {
-    console.log(color);
-  };
 
   handleDoubleClick = event => {
     this.setState({
@@ -40,7 +38,9 @@ class HeaderReArrange extends Component {
           width={150}
           circleSize={14}
           circleSpacing={7}
-          onChangeComplete={this.handleChangeComplete}
+          onChangeComplete={event =>
+            this.props.handleChangeComplete(event, this.props.activeElement)
+          }
         />
       </div>
     );
@@ -82,4 +82,4 @@ const mapStateToProps = state => ({
   header: state.activeSite.header
 });
 
-export default connect(mapStateToProps, null)(HeaderReArrange);
+export default connect(mapStateToProps, actions)(HeaderReArrange);

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { CirclePicker } from "react-color";
 import { COLORS } from "./Colors";
 import { connect } from "react-redux";
+import * as actions from "./actions";
 
 class FooterReArrange extends Component {
   constructor() {
@@ -13,9 +14,6 @@ class FooterReArrange extends Component {
       pickerTop: null
     };
   }
-  handleChangeComplete = color => {
-    console.log(color);
-  };
 
   handleDoubleClick = event => {
     this.setState({
@@ -38,7 +36,9 @@ class FooterReArrange extends Component {
           width={150}
           circleSize={14}
           circleSpacing={7}
-          onChangeComplete={this.handleChangeComplete}
+          onChangeComplete={event =>
+            this.props.handleChangeComplete(event, this.props.activeElement)
+          }
         />
       </div>
     );
@@ -84,4 +84,4 @@ const mapStateToProps = state => ({
   footer: state.activeSite.footer
 });
 
-export default connect(mapStateToProps, null)(FooterReArrange);
+export default connect(mapStateToProps, actions)(FooterReArrange);
