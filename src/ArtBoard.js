@@ -9,10 +9,39 @@ import { ProgressSpinner } from "primereact/components/progressspinner/ProgressS
 
 class ArtBoard extends Component {
   componentDidMount() {
-    this.props.fetchSite();
+    let id = parseInt(localStorage.getItem("id")) || 1;
+    window.localStorage.setItem("id", JSON.stringify(id));
+    this.props.fetchSite({ id: parseInt(localStorage.getItem("id")) });
   }
 
+  handleURLSubmit = event => {
+    event.preventDefault();
+    this.props.updateSite({
+      url: event.target.url.value,
+      id: this.props.activeSite.id
+    });
+
+    window.location = `sites/${event.target.url.value}`;
+  };
+
+  handleTitleSubmit = event => {
+    event.preventDefault();
+    this.props.updateSite({
+      title: event.target.title.value,
+      id: this.props.activeSite.id
+    });
+  };
+
+  newSite = () => {
+    this.props.createSite();
+  };
+
   render() {
+    if (this.props.activeSite.id) {
+      let id = this.props.activeSite.id;
+      localStorage.setItem("id", JSON.stringify(id));
+    }
+
     return (
       <div>
         <Menu />
@@ -21,36 +50,77 @@ class ArtBoard extends Component {
         ) : (
           <Page>
             <div className="status">
-              {this.props.editing ? (
-                <span>
-                  Editing "{this.props.activeSite.title}"
-                  {" • "}
-                  <button
-                    onClick={event =>
-                      this.props.updateEditing(event, null, !this.props.editing)
-                    }
-                  >
-                    Re-arrange
-                  </button>
-                  {" • "}
-                </span>
-              ) : (
-                <span>
-                  Re-arranging "{this.props.activeSite.title}"
-                  {" • "}
-                  <button
-                    onClick={event =>
-                      this.props.updateEditing(event, null, !this.props.editing)
-                    }
-                  >
-                    Edit
-                  </button>
-                  {" • "}
-                </span>
-              )}
-              <Link to={"/page-cast"} target="blank">
-                Preview
-              </Link>
+              <div>
+                {this.props.editing ? (
+                  <span>
+                    Editing "{this.props.activeSite.title}"
+                    {" • "}
+                    <button
+                      onClick={event =>
+                        this.props.updateEditing(
+                          event,
+                          null,
+                          !this.props.editing
+                        )
+                      }
+                    >
+                      Re-arrange
+                    </button>
+                    {" • "}
+                  </span>
+                ) : (
+                  <span>
+                    Re-arranging "{this.props.activeSite.title}"
+                    {" • "}
+                    <button
+                      onClick={event =>
+                        this.props.updateEditing(
+                          event,
+                          null,
+                          !this.props.editing
+                        )
+                      }
+                    >
+                      Edit
+                    </button>
+                    {" • "}
+                  </span>
+                )}
+                <Link to={"/page-cast"} target="blank">
+                  Preview
+                </Link>
+                {" • "}
+              </div>
+              <div>
+                <form onSubmit={this.handleTitleSubmit} action="POST">
+                  <label>
+                    Title:{" "}
+                    <input
+                      type="text"
+                      name="title"
+                      defaultValue={this.props.activeSite.title}
+                    />
+                  </label>{" "}
+                  <button className="btn">Update</button>
+                </form>
+                {"    "}
+                <form onSubmit={this.handleURLSubmit} action="POST">
+                  <label>
+                    URL:{" "}
+                    <input
+                      type="text"
+                      name="url"
+                      defaultValue={this.props.activeSite.url}
+                    />
+                  </label>{" "}
+                  <button className="btn">Publish</button>
+                </form>
+              </div>
+              <div>
+                <button className="btn" onClick={this.newSite}>
+                  New Site
+                </button>
+              </div>
             </div>
             <BodyLab />
           </Page>

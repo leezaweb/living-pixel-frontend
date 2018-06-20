@@ -3,11 +3,12 @@ import * as actions from "./actions";
 import { connect } from "react-redux";
 import { COLORS } from "./Colors";
 class Style extends Component {
-  handleChange = (key, name, value, element) => {
+  handleChange = (key, name, value, element, event) => {
     // document.querySelector(".styleForm input[type=file]").files
     // let file = this.fileUpload.files[0];
     // debugger;
-    if (this.fileUpload) {
+
+    if (this.fileUpload.files.length) {
       var self = this;
       var reader = new FileReader();
       reader.readAsDataURL(this.fileUpload.files[0]);
@@ -17,6 +18,11 @@ class Style extends Component {
           background_image: reader.result
         });
       };
+      self.props.updateElement({
+        element: element,
+        background_image: reader.result
+      });
+      event.target.value = "";
     } else {
       this.props.updateElement({
         key: key,
@@ -32,6 +38,7 @@ class Style extends Component {
   };
 
   render() {
+    console.log(this.fileUpload);
     if (this.props.activeElement.element_style)
       console.log(
         "NEW PROPS",
@@ -123,7 +130,8 @@ class Style extends Component {
                         key,
                         k[0],
                         event.target.value,
-                        this.props.activeElement
+                        this.props.activeElement,
+                        event
                       );
                     }}
                     multiple
@@ -157,7 +165,8 @@ class Style extends Component {
                         key,
                         k[0],
                         event.target.value,
-                        this.props.activeElement
+                        this.props.activeElement,
+                        event
                       );
                     }}
                     multiple
@@ -185,8 +194,12 @@ class Style extends Component {
                   <br />
                   <input
                     accept="image/*"
+                    style={
+                      !this.fileUpload
+                        ? { visibility: "hidden", zIndex: "999" }
+                        : null
+                    }
                     type="file"
-                    defaultValue={""}
                     name={k[0]}
                     ref={ref => (this.fileUpload = ref)}
                     onChange={event => {
@@ -195,10 +208,19 @@ class Style extends Component {
                         key,
                         k[0],
                         event.target.value,
-                        this.props.activeElement
+                        this.props.activeElement,
+                        event
                       );
                     }}
                   />
+                  <button
+                    style={{
+                      position: "relative",
+                      top: "-21px"
+                    }}
+                  >
+                    Upload New Image
+                  </button>
                 </label>
               ) : k[0].includes("filter") ? (
                 <label key={v}>
@@ -214,7 +236,8 @@ class Style extends Component {
                         key,
                         k[0],
                         event.target.value,
-                        this.props.activeElement
+                        this.props.activeElement,
+                        event
                       );
                     }}
                     style={{
@@ -252,7 +275,8 @@ class Style extends Component {
                         key,
                         k[0],
                         event.target.value,
-                        this.props.activeElement
+                        this.props.activeElement,
+                        event
                       );
                     }}
                     multiple
@@ -284,7 +308,8 @@ class Style extends Component {
                         key,
                         k[0],
                         event.target.value,
-                        this.props.activeElement
+                        this.props.activeElement,
+                        event
                       );
                     }}
                     multiple
@@ -319,7 +344,8 @@ class Style extends Component {
                         key,
                         k[0],
                         event.target.value,
-                        this.props.activeElement
+                        this.props.activeElement,
+                        event
                       );
                     }}
                     multiple
@@ -353,7 +379,8 @@ class Style extends Component {
                         key,
                         k[0],
                         event.target.value,
-                        this.props.activeElement
+                        this.props.activeElement,
+                        event
                       );
                     }}
                     multiple
@@ -393,7 +420,8 @@ class Style extends Component {
                         key,
                         k[0],
                         event.target.value,
-                        this.props.activeElement
+                        this.props.activeElement,
+                        event
                       );
                     }}
                   />
@@ -409,7 +437,7 @@ class Style extends Component {
 
     return (
       <div>
-        <form className="styleForm">{labelsFields}</form>
+        <div className="styleForm">{labelsFields}</div>
         {/*this.props.activeElement.tag === "img" ? (
           <label>
             <span>

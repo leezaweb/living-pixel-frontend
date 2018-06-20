@@ -138,6 +138,11 @@ class MainEdit extends Component {
 
             return (
               <section
+                draggable="true"
+                onDragEnd={e => this.props.dragEnd(e)}
+                onDragStart={e => this.props.dragStart(e)}
+                data-type={"section"}
+                data-site={this.props.activeSiteId}
                 style={sectionStyle}
                 onDoubleClick={this.handleDoubleClick}
                 key={section.id}

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PageCast from "./PageCast";
 import PageLab from "./PageLab";
+import PixelPage from "./PixelPage";
 import "./App.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/omega/theme.css";
@@ -20,6 +21,8 @@ class App extends Component {
           <Route exact path={"/(page-lab|account)"}>
             <PageLab />
           </Route>
+          <Route exact path="/sites/:url" component={PixelPage} />
+
           <Route exact path="/page-cast">
             <PageCast />
           </Route>

@@ -5,12 +5,14 @@ import * as actions from "./actions";
 import { connect } from "react-redux";
 import { ProgressSpinner } from "primereact/components/progressspinner/ProgressSpinner";
 
-class PageCast extends Component {
+class PixelPage extends Component {
   componentDidMount() {
-    let id = parseInt(localStorage.getItem("id")) || 1;
-    window.localStorage.setItem("id", JSON.stringify(id));
-    this.props.fetchSite({ id: parseInt(localStorage.getItem("id")) });
+    // debugger;
+    if (this.props.match.params.url) {
+      this.props.fetchSite({ url: this.props.match.params.url });
+    }
   }
+
   render() {
     return (
       <div className="page-cast">
@@ -26,4 +28,4 @@ const mapStateToProps = state => ({
   loading: state.loading
 });
 
-export default connect(mapStateToProps, actions)(PageCast);
+export default connect(mapStateToProps, actions)(PixelPage);

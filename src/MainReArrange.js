@@ -87,8 +87,6 @@ class MainReArrange extends Component {
   };
 
   render() {
-    console.log("new main", this.props.sections);
-
     const colorPicker = (
       <div
         style={{
@@ -142,6 +140,11 @@ class MainReArrange extends Component {
 
             return (
               <section
+                draggable="true"
+                onDragEnd={e => this.props.dragEnd(e)}
+                onDragStart={e => this.props.dragStart(e)}
+                data-type={"section"}
+                data-site={this.props.activeSiteId}
                 style={sectionStyle}
                 onClick={event => this.props.onClick(event, section)}
                 onDoubleClick={this.handleDoubleClick}

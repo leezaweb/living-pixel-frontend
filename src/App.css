@@ -1,6 +1,16 @@
 section {
   min-height: 225px;
 }
+
+section:hover::before {
+  content: ":↑";
+  display: block;
+  color: #444;
+  font-size: 3rem;
+  right: -4rem;
+  position: absolute;
+}
+
 main:not(.re-arranging) > section > div {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -29,7 +39,7 @@ main:not(.re-arranging) > section > div {
 
 .editing img.element {
   transform: translate(-50%, 0%);
-  width: 50%;
+  /* width: 50%; */
   height: auto;
 }
 .re-arranging img.element {
@@ -70,11 +80,18 @@ h5 {
 .buttons button:hover {
   text-decoration: underline;
 }
+.status,
 .buttons button,
+.status input,
 .status button,
 a {
+  font-size: 0.8rem;
+}
+.buttons button,
+.status button:not(.btn),
+a {
   background-color: transparent;
-  font-size: 16px;
+  /* font-size: 16px; */
   color: #777;
   border: 0;
   cursor: pointer;
@@ -167,7 +184,7 @@ select.selectColor {
 .selectBorder {
   /* background-color: #d4d4d4; */
 }
-label {
+.styleForm label {
   display: block;
 }
 label > span {
@@ -261,8 +278,8 @@ select:not(.selectColor) option {
   -webkit-flex-wrap: wrap;
   justify-content: center;
   flex-wrap: wrap;
-  transform: scaleY(-1);
-  transform: scaleX(-1);
+  /* transform: scaleY(-1); */
+  /* transform: scaleX(-1); */
 }
 
 .ui-tabview .ui-tabview-panel {
@@ -291,10 +308,10 @@ select:not(.selectColor) option {
   /* padding-top: calc(24% - 0.5em);
   padding-bottom: calc(24% - 0.5em); */
   min-height: 100px;
-  font-size: 1.2vw;
+  font-size: 1vw;
   flex-grow: 1;
-  transform: scaleY(-1);
-  transform: scaleX(-1);
+  /* transform: scaleY(-1); */
+  /* transform: scaleX(-1); */
 }
 
 .ui-tabview-panel > .tile > .box:not(:last-child) {
@@ -392,5 +409,12 @@ main {
   padding: 18px;
 }
 .page > .status {
+  display: grid;
+  grid-gap: 36px;
+  grid-template-columns: repeat(3, auto);
   text-align: center;
+}
+
+.status form {
+  display: inline-block;
 }

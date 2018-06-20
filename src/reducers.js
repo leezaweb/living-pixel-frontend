@@ -44,7 +44,7 @@ const activeElementReducer = (state = initialState.activeElement, action) => {
   }
 };
 
-const activeSiteReducer = (state = initialState.activeSite, action) => {
+export const activeSiteReducer = (state = initialState.activeSite, action) => {
   switch (action.type) {
     case "UPDATE_SITE":
       return action.site;
@@ -108,5 +108,7 @@ const rootReducer = combineReducers({
   activeElement: activeElementReducer,
   activeSite: activeSiteReducer
 });
+
+export let activeSite = initialState.activeSite;
 
 export default rootReducer;

@@ -1,11 +1,47 @@
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+import store from "./store";
+
 const SECTION_URL = "http://localhost:3000/api/v1/sections";
+const PUBLISHED_URL = "http://localhost:3000/api/v1/published-sites";
 const ELEMENT_URL = `http://localhost:3000/api/v1/elements`;
 const SITE_URL = `http://localhost:3000/api/v1/sites`;
 
+export const updateSite = object => {
+  const thunk = (dispatch, getState) => {
+    siteUpdater(object, dispatch, getState);
+  };
+  return thunk;
+};
+
+const siteUpdater = (object, dispatch, getState) => {
+  let data = {
+    url: object.url,
+    title: object.title,
+    id: object.id
+  };
+  fetch(`${SITE_URL}/${object.id}`, {
+    body: JSON.stringify(data),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    method: "PATCH"
+  })
+    .then(resp => console.log(resp))
+    .then(() =>
+      fetch(`${SITE_URL}/${object.id}`)
+        .then(resp => {
+          return resp.json();
+        })
+        .then(json => {
+          dispatch(renderSite(siteWithEditors(json)));
+        })
+    );
+};
+
 export const handleChangeComplete = (color, element) => {
   let key = Object.keys(element).find(key => key.includes("_style"));
-  const thunk = dispatch => {
+  const thunk = (dispatch, getState) => {
     elementUpdator(dispatch, {
       key: key,
       background_color: color.hex,
@@ -17,12 +53,38 @@ export const handleChangeComplete = (color, element) => {
 };
 
 export const dragEnd = e => {
-  const thunk = dispatch => {
+  const thunk = (dispatch, getState) => {
     console.log("end");
     this.dragged.style.opacity = "1";
     let data;
     if (this.over) {
       switch (this.dragged.dataset.type) {
+        case "section":
+          data = {
+            id: this.dragged.dataset.id,
+            over: this.over.dataset.id,
+            site: this.dragged.dataset.site,
+            key: this.dragged.dataset.id
+          };
+          // debugger;
+
+          fetch(`${SECTION_URL}/${this.dragged.dataset.id}`, {
+            body: JSON.stringify(data),
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            },
+            method: "PATCH"
+          })
+            .then(resp => console.log(resp))
+            .then(() =>
+              fetch(`${SITE_URL}/${getState().activeSite.id}`)
+                .then(resp => resp.json())
+                .then(json => {
+                  dispatch(renderSite(siteWithEditors(json)));
+                })
+            );
+          break;
         case "molecule":
           data = {
             section: this.over.dataset.id,
@@ -40,10 +102,10 @@ export const dragEnd = e => {
           })
             .then(resp => console.log(resp))
             .then(() =>
-              fetch(`${SITE_URL}/1`)
+              fetch(`${SITE_URL}/${getState().activeSite.id}`)
                 .then(resp => resp.json())
                 .then(json => {
-                  dispatch(updateSite(siteWithEditors(json)));
+                  dispatch(renderSite(siteWithEditors(json)));
                 })
             );
           break;
@@ -65,10 +127,10 @@ export const dragEnd = e => {
           })
             .then(resp => console.log(resp))
             .then(() =>
-              fetch(`${SITE_URL}/1`)
+              fetch(`${SITE_URL}/${getState().activeSite.id}`)
                 .then(resp => resp.json())
                 .then(json => {
-                  dispatch(updateSite(siteWithEditors(json)));
+                  dispatch(renderSite(siteWithEditors(json)));
                 })
             );
           break;
@@ -88,7 +150,7 @@ export const dragEnd = e => {
 };
 
 export const dragStart = e => {
-  const thunk = dispatch => {
+  const thunk = (dispatch, getState) => {
     console.log("start");
     this.dragged = e.currentTarget;
     this.dragged.style.opacity = "0.5";
@@ -96,7 +158,7 @@ export const dragStart = e => {
   return thunk;
 };
 export const dragOver = e => {
-  const thunk = dispatch => {
+  const thunk = (dispatch, getState) => {
     console.log("over");
     e.preventDefault();
     let classList = [...e.target.classList];
@@ -134,20 +196,28 @@ const mapSectionsToEditors = json => {
   });
 };
 
-const siteFetcher = dispatch => {
-  fetch(`${SITE_URL}/1`)
-    .then(resp => resp.json())
-    .then(json => {
-      dispatch(updateSite(siteWithEditors(json)));
-    });
+const siteFetcher = (object, dispatch, getState) => {
+  if (object.id) {
+    fetch(`${SITE_URL}/${object.id}`)
+      .then(resp => resp.json())
+      .then(json => {
+        dispatch(renderSite(siteWithEditors(json)));
+      });
+  } else {
+    fetch(`${PUBLISHED_URL}/${object.url}`)
+      .then(resp => resp.json())
+      .then(json => {
+        dispatch(renderSite(siteWithEditors(json)));
+      });
+  }
 };
 
-const sitesFetcher = dispatch => {
+const sitesFetcher = (dispatch, getState) => {
   fetch(SITE_URL)
     .then(resp => resp.json())
     .then(json => {
       dispatch(
-        updateSites({
+        renderSites({
           id: json.id,
           version: json.version,
           url: json.url,
@@ -172,26 +242,42 @@ const sitesFetcher = dispatch => {
     });
 };
 
-export function updateSites(sites) {
+export function renderSites(sites) {
   return { type: "UPDATE_SITES", sites };
 }
-export function updateSite(site) {
+export function renderSite(site) {
   return { type: "UPDATE_SITE", site };
 }
 
 export const fetchSites = () => {
-  const thunk = dispatch => {
-    sitesFetcher(dispatch);
+  const thunk = (dispatch, getState) => {
+    sitesFetcher(dispatch, getState);
   };
 
   return thunk;
 };
 
 export function createSite() {
-  return {
-    type: "CREATE_SITE"
+  const thunk = (dispatch, getState) => {
+    siteCreator(dispatch, getState);
   };
+
+  return thunk;
 }
+
+const siteCreator = (dispatch, getState) => {
+  fetch(`${SITE_URL}`, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    method: "POST"
+  })
+    .then(resp => resp.json())
+    .then(json => {
+      dispatch(renderSite(siteWithEditors(json)));
+    });
+};
 
 export function deleteSite() {
   return {
@@ -199,58 +285,58 @@ export function deleteSite() {
   };
 }
 
-export function fetchSite() {
-  const thunk = dispatch => {
-    siteFetcher(dispatch);
+export function fetchSite(object) {
+  const thunk = (dispatch, getState) => {
+    siteFetcher(object, dispatch, getState);
   };
 
   return thunk;
 }
 
 export const cloneOrganism = object => {
-  const thunk = dispatch => {
-    organismCloner(dispatch, object);
+  const thunk = (dispatch, getState) => {
+    organismCloner(object, dispatch, getState);
   };
 
   return thunk;
 };
 
-const organismCloner = (dispatch, object) => {
+const organismCloner = (object, dispatch, getState) => {
   let data = {
     site: object.site,
     key: object.key
   };
   console.log("gonna clone template");
 
-  fetch(`${SITE_URL}`, {
+  fetch(`${SITE_URL}/${getState().activeSite.id}`, {
     body: JSON.stringify(data),
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json"
     },
-    method: "POST"
+    method: "PATCH"
   })
     .then(resp => console.log(resp))
     .then(() =>
-      fetch(`${SITE_URL}/1`)
+      fetch(`${SITE_URL}/${getState().activeSite.id}`)
         .then(resp => {
           return resp.json();
         })
         .then(json => {
-          dispatch(updateSite(siteWithEditors(json)));
+          dispatch(renderSite(siteWithEditors(json)));
         })
     );
 };
 
 export const cloneElement = object => {
-  const thunk = dispatch => {
-    elementCloner(dispatch, object);
+  const thunk = (dispatch, getState) => {
+    elementCloner(object, dispatch, getState);
   };
 
   return thunk;
 };
 
-const elementCloner = (dispatch, object) => {
+const elementCloner = (object, dispatch, getState) => {
   let data = {
     id: object.element.id,
     key: "clone"
@@ -267,18 +353,18 @@ const elementCloner = (dispatch, object) => {
   })
     .then(resp => console.log(resp))
     .then(() =>
-      fetch(`${SITE_URL}/1`)
+      fetch(`${SITE_URL}/${getState().activeSite.id}`)
         .then(resp => {
           return resp.json();
         })
         .then(json => {
-          dispatch(updateSite(siteWithEditors(json)));
+          dispatch(renderSite(siteWithEditors(json)));
         })
     );
 };
 
 export const updateElement = object => {
-  const thunk = dispatch => {
+  const thunk = (dispatch, getState) => {
     if ("editorState" in object) {
       dispatch({
         type: "UPDATE_ELEMENT",
@@ -286,13 +372,13 @@ export const updateElement = object => {
       });
     }
 
-    elementUpdator(dispatch, object);
+    elementUpdator(object, dispatch, getState);
   };
 
   return thunk;
 };
 
-const elementUpdator = (dispatch, object) => {
+const elementUpdator = (object, dispatch, getState) => {
   let id;
   let data;
 
@@ -304,7 +390,7 @@ const elementUpdator = (dispatch, object) => {
       )
     };
 
-    fetchToElement(object, data, object.element.id, dispatch);
+    fetchToElement(object, data, object.element.id, dispatch, getState);
   } else if ("src" in object) {
     object.key = "element";
     data = {
@@ -312,7 +398,7 @@ const elementUpdator = (dispatch, object) => {
       src: object.src
     };
 
-    fetchToElement(object, data, object.element.id, dispatch);
+    fetchToElement(object, data, object.element.id, dispatch, getState);
   } else if ("background_image" in object) {
     object.key = "section";
     data = {
@@ -320,14 +406,14 @@ const elementUpdator = (dispatch, object) => {
       background_image: object.background_image
     };
 
-    fetchToElement(object, data, object.element.id, dispatch);
+    fetchToElement(object, data, object.element.id, dispatch, getState);
   } else if ("background_color" in object) {
     id = object.element[object.key].id;
     data = {
       background_color: object.background_color
     };
 
-    fetchToStyle(object, data, id, dispatch);
+    fetchToStyle(object, data, id, dispatch, getState);
   } else {
     if ("value" in object) {
       id = object.element[object.key].id;
@@ -345,11 +431,11 @@ const elementUpdator = (dispatch, object) => {
       };
     }
 
-    fetchToStyle(object, data, id, dispatch);
+    fetchToStyle(object, data, id, dispatch, getState);
   }
 };
 
-const fetchToElement = (object, data, id, dispatch) => {
+const fetchToElement = (object, data, id, dispatch, getState) => {
   const ELEMENT_URL = `http://localhost:3000/api/v1/${object.key.replace(
     "_style",
     ""
@@ -365,13 +451,17 @@ const fetchToElement = (object, data, id, dispatch) => {
   })
     .then(resp => console.log(resp))
     .then(() =>
-      fetch(`${SITE_URL}/1`).then(resp => {
-        return resp.json();
-      })
+      fetch(`${SITE_URL}/${getState().activeSite.id}`)
+        .then(resp => {
+          return resp.json();
+        })
+        .then(json => {
+          dispatch(renderSite(siteWithEditors(json)));
+        })
     );
 };
 
-const fetchToStyle = (object, data, id, dispatch) => {
+const fetchToStyle = (object, data, id, dispatch, getState) => {
   const ELEMENT_STYLE_URL = `http://localhost:3000/api/v1/${object.key}s`;
 
   fetch(`${ELEMENT_STYLE_URL}/${id}`, {
@@ -384,25 +474,25 @@ const fetchToStyle = (object, data, id, dispatch) => {
   })
     .then(resp => console.log(resp))
     .then(() =>
-      fetch(`${SITE_URL}/1`)
+      fetch(`${SITE_URL}/${getState().activeSite.id}`)
         .then(resp => {
           return resp.json();
         })
         .then(json => {
-          dispatch(updateSite(siteWithEditors(json)));
+          dispatch(renderSite(siteWithEditors(json)));
         })
     );
 };
 
 export const deleteElement = object => {
-  const thunk = dispatch => {
-    elementDeleter(dispatch, object);
+  const thunk = (dispatch, getState) => {
+    elementDeleter(object, dispatch, getState);
   };
 
   return thunk;
 };
 
-const elementDeleter = (dispatch, object) => {
+const elementDeleter = (object, dispatch, getState) => {
   const ELEMENT_URL = `http://localhost:3000/api/v1/elements`;
 
   let id = object.element.id;
@@ -421,12 +511,12 @@ const elementDeleter = (dispatch, object) => {
   })
     .then(resp => console.log(resp))
     .then(() =>
-      fetch(`${SITE_URL}/1`)
+      fetch(`${SITE_URL}/${getState().activeSite.id}`)
         .then(resp => {
           return resp.json();
         })
         .then(json => {
-          dispatch(updateSite(siteWithEditors(json)));
+          dispatch(renderSite(siteWithEditors(json)));
         })
     );
 };
