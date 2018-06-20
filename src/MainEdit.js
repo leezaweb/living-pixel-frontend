@@ -84,8 +84,9 @@ class MainEdit extends Component {
     });
   };
 
-  componentDidMount() {
+  componentDidUpdate() {
     let sections = [...document.querySelectorAll("section")];
+
     sections.forEach(section => {
       // let section = document.querySelector(s);
       let id = section.dataset.id;
@@ -95,8 +96,19 @@ class MainEdit extends Component {
         child.setAttribute("data-id", id);
       });
     });
-  }
 
+    let images = [...document.querySelectorAll("img")];
+    images.forEach(image => {
+      // debugger;
+      if (image.naturalWidth > image.naturalHeight) {
+        image.style.width = "100%";
+        image.style.height = "auto";
+      } else {
+        image.style.width = "100%";
+        image.style.height = "auto";
+      }
+    });
+  }
   render() {
     const colorPicker = (
       <div
@@ -133,7 +145,11 @@ class MainEdit extends Component {
                     i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)
                 )
                 .join("");
-              sectionStyle[camelKey] = value;
+              if (camelKey === "minHeight") {
+                sectionStyle[camelKey] = value / 12 + "vw";
+              } else {
+                sectionStyle[camelKey] = value;
+              }
             }
 
             return (
@@ -163,7 +179,29 @@ class MainEdit extends Component {
                             i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)
                         )
                         .join("");
-                      elementStyle[camelKey] = value;
+
+                      if (camelKey === "gridRowStart") {
+                        elementStyle[camelKey] = value + 1;
+                      } else if (camelKey === "gridRowEnd") {
+                        elementStyle[camelKey] = value + 1;
+                      } else if (
+                        camelKey === "gridColumnStart" &&
+                        value === 0
+                      ) {
+                        elementStyle[camelKey] = value + 1;
+                      } else if (
+                        camelKey === "gridColumnEnd" &&
+                        value < 12 &&
+                        elementStyle.gridColumnStart === 1
+                      ) {
+                        elementStyle[camelKey] = value + 1;
+                      } else if (camelKey === "columnGap") {
+                        elementStyle[camelKey] = value / 12 + "vw";
+                      } else if (camelKey.includes("Width")) {
+                        elementStyle[camelKey] = value / 12 + "vw";
+                      } else {
+                        elementStyle[camelKey] = value;
+                      }
                     }
 
                     return element.tag === "h2" ? (

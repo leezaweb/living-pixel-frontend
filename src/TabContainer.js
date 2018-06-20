@@ -68,7 +68,7 @@ class TabContainer extends Component {
           leftIcon="fa-gear"
           style={{ width: "100%" }}
         >
-          <Style activeElement={this.props.activeElement} />
+          <Style />
         </TabPanel>
       </TabView>
     );

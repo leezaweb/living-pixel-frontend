@@ -17,7 +17,7 @@ const siteUpdater = (object, dispatch, getState) => {
   let data = {
     url: object.url,
     title: object.title,
-    id: object.id
+    id: getState().activeSite.id
   };
   fetch(`${SITE_URL}/${object.id}`, {
     body: JSON.stringify(data),
@@ -40,13 +40,17 @@ const siteUpdater = (object, dispatch, getState) => {
 };
 
 export const handleChangeComplete = (color, element) => {
-  let key = Object.keys(element).find(key => key.includes("_style"));
+  let key = Object.keys(element).find(k => k.includes("style"));
   const thunk = (dispatch, getState) => {
-    elementUpdator(dispatch, {
-      key: key,
-      background_color: color.hex,
-      element: element
-    });
+    elementUpdator(
+      {
+        key: key,
+        background_color: color.hex,
+        element: element
+      },
+      dispatch,
+      getState
+    );
   };
   [...document.querySelectorAll(".circle-picker")].forEach(cp => cp.remove());
   return thunk;
@@ -55,105 +59,111 @@ export const handleChangeComplete = (color, element) => {
 export const dragEnd = e => {
   const thunk = (dispatch, getState) => {
     console.log("end");
-    this.dragged.style.opacity = "1";
-    let data;
-    if (this.over) {
-      switch (this.dragged.dataset.type) {
-        case "section":
-          data = {
-            id: this.dragged.dataset.id,
-            over: this.over.dataset.id,
-            site: this.dragged.dataset.site,
-            key: this.dragged.dataset.id
-          };
-          // debugger;
+    if (e.screenX > 970 || e.target.dataset.type) {
+      this.dragged.style.opacity = "1";
+      let data;
+      if (this.over) {
+        switch (this.dragged.dataset.type) {
+          case "section":
+            data = {
+              id: this.dragged.dataset.id,
+              over: this.over.dataset.id,
+              site: this.dragged.dataset.site,
+              key: this.dragged.dataset.id
+            };
+            // debugger;
 
-          fetch(`${SECTION_URL}/${this.dragged.dataset.id}`, {
-            body: JSON.stringify(data),
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json"
-            },
-            method: "PATCH"
-          })
-            .then(resp => console.log(resp))
-            .then(() =>
-              fetch(`${SITE_URL}/${getState().activeSite.id}`)
-                .then(resp => resp.json())
-                .then(json => {
-                  dispatch(renderSite(siteWithEditors(json)));
-                })
-            );
-          break;
-        case "molecule":
-          data = {
-            section: this.over.dataset.id,
-            site: this.dragged.dataset.site,
-            key: this.dragged.dataset.id
-          };
+            fetch(`${SECTION_URL}/${this.dragged.dataset.id}`, {
+              body: JSON.stringify(data),
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+              },
+              method: "PATCH"
+            })
+              .then(resp => console.log(resp))
+              .then(() =>
+                fetch(`${SITE_URL}/${getState().activeSite.id}`)
+                  .then(resp => resp.json())
+                  .then(json => {
+                    dispatch(renderSite(siteWithEditors(json)));
+                  })
+              );
+            break;
+          case "molecule":
+            data = {
+              section: this.over.dataset.id,
+              site: this.dragged.dataset.site,
+              key: this.dragged.dataset.id
+            };
 
-          fetch(SECTION_URL, {
-            body: JSON.stringify(data),
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json"
-            },
-            method: "POST"
-          })
-            .then(resp => console.log(resp))
-            .then(() =>
-              fetch(`${SITE_URL}/${getState().activeSite.id}`)
-                .then(resp => resp.json())
-                .then(json => {
-                  dispatch(renderSite(siteWithEditors(json)));
-                })
-            );
-          break;
-        case "atom":
-          console.log(this.dragged.dataset);
-          data = {
-            section: this.over.dataset.id,
-            site: this.dragged.dataset.site,
-            key: this.dragged.dataset.id
-          };
+            fetch(SECTION_URL, {
+              body: JSON.stringify(data),
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+              },
+              method: "POST"
+            })
+              .then(resp => console.log(resp))
+              .then(() =>
+                fetch(`${SITE_URL}/${getState().activeSite.id}`)
+                  .then(resp => resp.json())
+                  .then(json => {
+                    dispatch(renderSite(siteWithEditors(json)));
+                  })
+              );
+            break;
+          case "atom":
+            console.log(this.dragged.dataset);
+            data = {
+              section: this.over.dataset.id,
+              site: this.dragged.dataset.site,
+              key: this.dragged.dataset.id
+            };
 
-          fetch(ELEMENT_URL, {
-            body: JSON.stringify(data),
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json"
-            },
-            method: "POST"
-          })
-            .then(resp => console.log(resp))
-            .then(() =>
-              fetch(`${SITE_URL}/${getState().activeSite.id}`)
-                .then(resp => resp.json())
-                .then(json => {
-                  dispatch(renderSite(siteWithEditors(json)));
-                })
-            );
-          break;
-        default:
+            fetch(ELEMENT_URL, {
+              body: JSON.stringify(data),
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+              },
+              method: "POST"
+            })
+              .then(resp => console.log(resp))
+              .then(() =>
+                fetch(`${SITE_URL}/${getState().activeSite.id}`)
+                  .then(resp => resp.json())
+                  .then(json => {
+                    dispatch(renderSite(siteWithEditors(json)));
+                  })
+              );
+            break;
+          default:
+        }
+        console.log(
+          `"${this.dragged.dataset.id}" dragged over Section ${
+            this.over.dataset.id
+          }`
+        );
+
+        console.log(this.dragged.dataset.id);
+        console.log(this.over.dataset.id);
       }
-      console.log(
-        `"${this.dragged.dataset.id}" dragged over Section ${
-          this.over.dataset.id
-        }`
-      );
-
-      console.log(this.dragged.dataset.id);
-      console.log(this.over.dataset.id);
     }
   };
   return thunk;
 };
 
 export const dragStart = e => {
+  e.stopPropagation();
   const thunk = (dispatch, getState) => {
     console.log("start");
-    this.dragged = e.currentTarget;
-    this.dragged.style.opacity = "0.5";
+
+    if (e.screenX > 970 || e.target.dataset.type) {
+      this.dragged = e.currentTarget;
+      this.dragged.style.opacity = "0.5";
+    }
   };
   return thunk;
 };
@@ -303,7 +313,6 @@ export const cloneOrganism = object => {
 
 const organismCloner = (object, dispatch, getState) => {
   let data = {
-    site: object.site,
     key: object.key
   };
   console.log("gonna clone template");
@@ -378,19 +387,47 @@ export const updateElement = object => {
   return thunk;
 };
 
+export const updateElementGrid = object => {
+  const thunk = (dispatch, getState) => {
+    if ("editorState" in object) {
+      dispatch({
+        type: "UPDATE_ELEMENT",
+        payload: { editorState: object.editorState, element: object.element }
+      });
+    }
+
+    elementGridUpdator(object, dispatch, getState);
+  };
+
+  return thunk;
+};
+
+const elementGridUpdator = (object, dispatch, getState) => {
+  let id = object.element[object.key].id;
+  let data = {
+    grid_column_start: object.grid_column_start,
+    grid_column_end: object.grid_column_end,
+    grid_row_start: object.grid_row_start,
+    grid_row_end: object.grid_row_end
+  };
+
+  fetchToStyleGrid(object, data, id, dispatch, getState);
+};
+
 const elementUpdator = (object, dispatch, getState) => {
   let id;
   let data;
 
   if ("editorState" in object) {
+    // debugger;
     data = {
-      id: object.id,
+      id: object.element.id,
       inner_text: JSON.stringify(
         convertToRaw(object.editorState.getCurrentContent())
       )
     };
 
-    fetchToElement(object, data, object.element.id, dispatch, getState);
+    fetchToElementText(object, data, object.element.id, dispatch, getState);
   } else if ("src" in object) {
     object.key = "element";
     data = {
@@ -435,12 +472,26 @@ const elementUpdator = (object, dispatch, getState) => {
   }
 };
 
+const fetchToElementText = (object, data, id, dispatch, getState) => {
+  const ELEMENT_URL = `http://localhost:3000/api/v1/${object.key.replace(
+    "_style",
+    ""
+  )}s`;
+  fetch(`${ELEMENT_URL}/${id}`, {
+    body: JSON.stringify(data),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    method: "PATCH"
+  }).then(resp => console.log(resp));
+};
+
 const fetchToElement = (object, data, id, dispatch, getState) => {
   const ELEMENT_URL = `http://localhost:3000/api/v1/${object.key.replace(
     "_style",
     ""
   )}s`;
-
   fetch(`${ELEMENT_URL}/${id}`, {
     body: JSON.stringify(data),
     headers: {
@@ -450,15 +501,29 @@ const fetchToElement = (object, data, id, dispatch, getState) => {
     method: "PATCH"
   })
     .then(resp => console.log(resp))
-    .then(() =>
+    .then(() => {
       fetch(`${SITE_URL}/${getState().activeSite.id}`)
         .then(resp => {
+          console.log(resp);
           return resp.json();
         })
         .then(json => {
           dispatch(renderSite(siteWithEditors(json)));
-        })
-    );
+        });
+    });
+};
+
+const fetchToStyleGrid = (object, data, id, dispatch, getState) => {
+  const ELEMENT_STYLE_URL = `http://localhost:3000/api/v1/${object.key}s`;
+
+  fetch(`${ELEMENT_STYLE_URL}/${id}`, {
+    body: JSON.stringify(data),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    method: "PATCH"
+  }).then(resp => console.log(resp));
 };
 
 const fetchToStyle = (object, data, id, dispatch, getState) => {

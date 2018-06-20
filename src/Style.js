@@ -7,22 +7,31 @@ class Style extends Component {
     // document.querySelector(".styleForm input[type=file]").files
     // let file = this.fileUpload.files[0];
     // debugger;
+    if (this.fileUpload) {
+      if (this.fileUpload.files.length) {
+        var self = this;
+        var reader = new FileReader();
+        reader.readAsDataURL(this.fileUpload.files[0]);
+        reader.onload = () => {
+          self.props.updateElement({
+            element: element,
+            background_image: reader.result
+          });
+        };
 
-    if (this.fileUpload.files.length) {
-      var self = this;
-      var reader = new FileReader();
-      reader.readAsDataURL(this.fileUpload.files[0]);
-      reader.onload = () => {
         self.props.updateElement({
           element: element,
           background_image: reader.result
         });
-      };
-      self.props.updateElement({
-        element: element,
-        background_image: reader.result
-      });
-      event.target.value = "";
+        event.target.value = "";
+      } else {
+        this.props.updateElement({
+          key: key,
+          name: name,
+          value: value,
+          element: element
+        });
+      }
     } else {
       this.props.updateElement({
         key: key,
@@ -194,11 +203,11 @@ class Style extends Component {
                   <br />
                   <input
                     accept="image/*"
-                    style={
-                      !this.fileUpload
-                        ? { visibility: "hidden", zIndex: "999" }
-                        : null
-                    }
+                    style={{
+                      visibility: "hidden",
+                      width: "100%",
+                      height: "50px"
+                    }}
                     type="file"
                     name={k[0]}
                     ref={ref => (this.fileUpload = ref)}
@@ -214,12 +223,16 @@ class Style extends Component {
                     }}
                   />
                   <button
+                    onClick={e => e.preventDefault()}
                     style={{
+                      borderRadius: "6px",
+                      textAlign: "left",
                       position: "relative",
-                      top: "-21px"
+                      zIndex: "-9999",
+                      top: "-50px"
                     }}
                   >
-                    Upload New Image
+                    Click to Upload a New Image
                   </button>
                 </label>
               ) : k[0].includes("filter") ? (

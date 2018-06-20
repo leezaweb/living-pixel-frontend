@@ -26,6 +26,7 @@ class MainReArrange extends Component {
     if (file) {
       var self = this;
       var reader = new FileReader();
+
       reader.readAsDataURL(file[0]);
       reader.onload = () => {
         self.props.updateElement({
@@ -46,7 +47,7 @@ class MainReArrange extends Component {
       );
 
       if (item) {
-        this.props.updateElement({
+        this.props.updateElementGrid({
           key: "element_style",
           grid_column_start: item.x,
           grid_column_end: item.x + item.w,
@@ -67,6 +68,7 @@ class MainReArrange extends Component {
 
   componentDidMount() {
     let sections = [...document.querySelectorAll("section")];
+
     sections.forEach(section => {
       // let section = document.querySelector(s);
       let id = section.dataset.id;
@@ -75,6 +77,44 @@ class MainReArrange extends Component {
         child.classList.add(`section-${id}`);
         child.setAttribute("data-id", id);
       });
+    });
+
+    let images = [...document.querySelectorAll("img")];
+    images.forEach(image => {
+      // debugger;
+      if (image.naturalWidth > image.naturalHeight) {
+        image.style.width = "100%";
+        image.style.height = "auto";
+      } else {
+        image.style.height = "100%";
+        image.style.width = "auto";
+      }
+    });
+  }
+
+  componentDidUpdate() {
+    let sections = [...document.querySelectorAll("section")];
+
+    sections.forEach(section => {
+      // let section = document.querySelector(s);
+      let id = section.dataset.id;
+      let allChildren = [...section.getElementsByTagName("*")];
+      allChildren.forEach(child => {
+        child.classList.add(`section-${id}`);
+        child.setAttribute("data-id", id);
+      });
+    });
+
+    let images = [...document.querySelectorAll("img")];
+    images.forEach(image => {
+      // debugger;
+      if (image.naturalWidth > image.naturalHeight) {
+        image.style.width = "100%";
+        image.style.height = "auto";
+      } else {
+        image.style.width = "100%";
+        image.style.height = "auto";
+      }
     });
   }
 
@@ -140,7 +180,6 @@ class MainReArrange extends Component {
 
             return (
               <section
-                draggable="true"
                 onDragEnd={e => this.props.dragEnd(e)}
                 onDragStart={e => this.props.dragStart(e)}
                 data-type={"section"}
@@ -158,7 +197,7 @@ class MainReArrange extends Component {
                     onLayoutChange={this.onLayoutChange}
                     layout={layout}
                     cols={12}
-                    width={800}
+                    width={1150}
                     data-id={section.id}
                     className={`section-${section.id}`}
                   >

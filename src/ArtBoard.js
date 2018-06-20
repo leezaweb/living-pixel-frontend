@@ -17,19 +17,18 @@ class ArtBoard extends Component {
   handleURLSubmit = event => {
     event.preventDefault();
     this.props.updateSite({
-      url: event.target.url.value,
-      id: this.props.activeSite.id
+      url: event.target.url.value
     });
-
+    event.target.reset();
     window.location = `sites/${event.target.url.value}`;
   };
 
   handleTitleSubmit = event => {
     event.preventDefault();
     this.props.updateSite({
-      title: event.target.title.value,
-      id: this.props.activeSite.id
+      title: event.target.title.value
     });
+    event.target.reset();
   };
 
   newSite = () => {
@@ -44,7 +43,7 @@ class ArtBoard extends Component {
 
     return (
       <div>
-        <Menu />
+        {/*<Menu />*/}
         {this.props.loading ? (
           <ProgressSpinner />
         ) : (
