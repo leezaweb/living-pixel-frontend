@@ -47,13 +47,6 @@ class Style extends Component {
   };
 
   render() {
-    console.log(this.fileUpload);
-    if (this.props.activeElement.element_style)
-      console.log(
-        "NEW PROPS",
-        this.props.activeElement.element_style.grid_column_end
-      );
-
     const BORDERS = [
       "dotted",
       "dashed",
@@ -274,7 +267,7 @@ class Style extends Component {
                     ))}
                   </select>
                 </label>
-              ) : k[0].includes("align") ? (
+              ) : k[0].includes("text_align") ? (
                 <label key={v}>
                   <span>{`${k[0].replace(/_/g, " ")}`}:</span>
                   <br />

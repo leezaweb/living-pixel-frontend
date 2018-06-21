@@ -35,6 +35,9 @@ const siteUpdater = (object, dispatch, getState) => {
         })
         .then(json => {
           dispatch(renderSite(siteWithEditors(json)));
+          if (object.url) {
+            window.location = `sites/${object.url}`;
+          }
         })
     );
 };
@@ -159,6 +162,8 @@ export const dragStart = e => {
   e.stopPropagation();
   const thunk = (dispatch, getState) => {
     console.log("start");
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/html", e.currentTarget);
 
     if (e.screenX > 970 || e.target.dataset.type) {
       this.dragged = e.currentTarget;
@@ -517,7 +522,19 @@ const fetchToStyleGrid = (object, data, id, dispatch, getState) => {
       "Content-Type": "application/json"
     },
     method: "PATCH"
-  }).then(resp => console.log(resp));
+  })
+    .then(resp => console.log(resp))
+    .then(() => {
+      if (getState().editing) {
+        fetch(`${SITE_URL}/${getState().activeSite.id}`)
+          .then(resp => {
+            return resp.json();
+          })
+          .then(json => {
+            dispatch(renderSite(siteWithEditors(json)));
+          });
+      }
+    });
 };
 
 const fetchToStyle = (object, data, id, dispatch, getState) => {
@@ -544,6 +561,7 @@ const fetchToStyle = (object, data, id, dispatch, getState) => {
 };
 
 export const deleteElement = object => {
+  debugger;
   const thunk = (dispatch, getState) => {
     elementDeleter(object, dispatch, getState);
   };

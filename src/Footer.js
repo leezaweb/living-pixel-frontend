@@ -10,7 +10,12 @@ class Footer extends Component {
         .split("_")
         .map((w, i) => (i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)))
         .join("");
-      style[camelKey] = value;
+
+      if (camelKey.includes("Width")) {
+        style[camelKey] = value / 12 + "vw";
+      } else {
+        style[camelKey] = value;
+      }
       if (!camelKey.includes("border")) {
         elementStyleSansBorders[camelKey] = value;
       }

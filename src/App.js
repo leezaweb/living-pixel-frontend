@@ -3,6 +3,7 @@ import PageCast from "./PageCast";
 import PageLab from "./PageLab";
 import PixelPage from "./PixelPage";
 import "./App.css";
+import "./Molecules.css";
 import "./Organisms.css";
 import "./Atoms.css";
 import "primereact/resources/primereact.min.css";

@@ -169,6 +169,9 @@ class MainEdit extends Component {
                 <div>
                   {section.elements.map(element => {
                     let elementStyle = {};
+                    let elementStyleSansBorders = {};
+                    let elementGridStyle = {};
+
                     for (const [key, value] of Object.entries(
                       element.element_style
                     )) {
@@ -179,36 +182,44 @@ class MainEdit extends Component {
                             i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)
                         )
                         .join("");
-
-                      if (camelKey === "gridRowStart") {
-                        elementStyle[camelKey] = value + 1;
-                      } else if (camelKey === "gridRowEnd") {
-                        elementStyle[camelKey] = value + 1;
-                      } else if (
-                        camelKey === "gridColumnStart" &&
-                        value === 0
-                      ) {
-                        elementStyle[camelKey] = value + 1;
-                      } else if (
-                        camelKey === "gridColumnEnd" &&
-                        value < 12 &&
-                        elementStyle.gridColumnStart === 1
-                      ) {
-                        elementStyle[camelKey] = value + 1;
-                      } else if (camelKey === "columnGap") {
-                        elementStyle[camelKey] = value / 12 + "vw";
-                      } else if (camelKey.includes("Width")) {
-                        elementStyle[camelKey] = value / 12 + "vw";
-                      } else {
-                        elementStyle[camelKey] = value;
+                      if (!camelKey.includes("grid")) {
+                        if (camelKey === "columnGap") {
+                          elementStyle[camelKey] = value / 12 + "vw";
+                        } else if (camelKey.includes("Width")) {
+                          elementStyle[camelKey] = value / 12 + "vw";
+                        } else {
+                          elementStyle[camelKey] = value;
+                        }
+                      } else if (camelKey.includes("grid")) {
+                        if (camelKey === "gridRowStart") {
+                          console.log(camelKey, value);
+                          elementGridStyle[camelKey] = value + 1;
+                          elementStyleSansBorders[camelKey] = value + 1;
+                          console.log(
+                            elementGridStyle[camelKey],
+                            elementStyleSansBorders[camelKey]
+                          );
+                        } else if (camelKey === "gridRowEnd") {
+                          elementGridStyle[camelKey] = value + 1;
+                          elementStyleSansBorders[camelKey] = value + 1;
+                        } else if (camelKey === "gridColumnStart") {
+                          elementGridStyle[camelKey] = value + 1;
+                          elementStyleSansBorders[camelKey] = value + 1;
+                        } else if (camelKey === "gridColumnEnd") {
+                          elementGridStyle[camelKey] = value + 1;
+                          elementStyleSansBorders[camelKey] = value + 1;
+                        }
+                      } else if (!camelKey.includes("border")) {
+                        elementStyleSansBorders[camelKey] = value;
                       }
                     }
+                    console.log(elementStyleSansBorders);
 
                     return element.tag === "h2" ? (
                       <h2
                         className="element"
                         key={element.id.toString()}
-                        style={elementStyle}
+                        style={{ ...elementStyle, ...elementGridStyle }}
                         onDoubleClick={event =>
                           this.props.onDoubleClick(event, element)
                         }
@@ -262,7 +273,7 @@ class MainEdit extends Component {
                       <h3
                         className="element"
                         key={element.id.toString()}
-                        style={elementStyle}
+                        style={{ ...elementStyle, ...elementGridStyle }}
                         onDoubleClick={event =>
                           this.props.onDoubleClick(event, element)
                         }
@@ -316,7 +327,7 @@ class MainEdit extends Component {
                       <h4
                         className="element"
                         key={element.id.toString()}
-                        style={elementStyle}
+                        style={{ ...elementStyle, ...elementGridStyle }}
                         onDoubleClick={event =>
                           this.props.onDoubleClick(event, element)
                         }
@@ -370,8 +381,7 @@ class MainEdit extends Component {
                       <div
                         key={element.id.toString()}
                         style={{
-                          ...elementStyle,
-                          position: "relative"
+                          ...elementStyleSansBorders
                         }}
                         onDoubleClick={event =>
                           this.props.onDoubleClick(event, element)
@@ -396,7 +406,12 @@ class MainEdit extends Component {
                             />
                           </span>
                         ) : null}
-                        <img className="element" src={element.src} alt="" />
+                        <img
+                          className="element"
+                          src={element.src}
+                          alt=""
+                          style={elementStyle}
+                        />
                         <Dropzone
                           onDrop={event =>
                             this.onDrop.bind(this)(event, element)
@@ -410,7 +425,7 @@ class MainEdit extends Component {
                       <div
                         className="element"
                         key={element.id.toString()}
-                        style={elementStyle}
+                        style={{ ...elementStyle, ...elementGridStyle }}
                         onDoubleClick={event =>
                           this.props.onDoubleClick(event, element)
                         }

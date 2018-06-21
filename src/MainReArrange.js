@@ -392,7 +392,7 @@ class MainReArrange extends Component {
                               element.grid_column_start,
                             h: element.grid_row_end - element.grid_row_start
                           }}
-                          style={elementStyle}
+                          style={elementStyleSansBorders}
                           onDoubleClick={(event, element) =>
                             this.props.onDoubleClick(event, element)
                           }
@@ -418,6 +418,7 @@ class MainReArrange extends Component {
                           ) : null}
 
                           <img
+                            style={elementStyle}
                             className={`element section-${section.id}`}
                             data-id={section.id}
                             src={element.src}
@@ -428,7 +429,7 @@ class MainReArrange extends Component {
                               this.onDrop.bind(this)(event, element)
                             }
                             style={{ border: "none" }}
-                            accept="image/jpeg, image/jpg, image/png, image/gif"
+                            accept="image/jpeg, image/jpg, image/png, image/gif, image/svg"
                           >
                             <i className="fa fa-upload" />
                           </Dropzone>

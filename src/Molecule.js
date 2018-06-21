@@ -14,11 +14,13 @@ class Molecule extends Component {
         onDragEnd={e => this.props.dragEnd(e)}
         onDragStart={e => this.props.dragStart(e)}
       >
-        <span className="child">
-          <i className="fa fa-object-ungroup" />
-          <br />
-          {this.props.title}
-        </span>
+        {this.props.title === "Blank Section" ? (
+          <span className="child">
+            <i className="fa fa-object-ungroup" />
+            <br />
+            {this.props.title}
+          </span>
+        ) : null}
       </div>
     );
   }

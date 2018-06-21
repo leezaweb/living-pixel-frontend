@@ -19,7 +19,6 @@ class ArtBoard extends Component {
       url: event.target.url.value
     });
     event.target.reset();
-    window.location = `sites/${event.target.url.value}`;
   };
 
   handleTitleSubmit = event => {
@@ -84,11 +83,12 @@ class ArtBoard extends Component {
                     </button>
                     {" • "}
                   </span>
-                )}
+                )}{" "}
+              </div>
+              <div>
                 <Link to={"/page-cast"} target="blank">
                   Preview
                 </Link>
-                {" • "}
               </div>
               <div>
                 <form onSubmit={this.handleTitleSubmit} action="POST">

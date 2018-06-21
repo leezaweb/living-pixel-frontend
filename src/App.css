@@ -1,9 +1,13 @@
+[draggable="true"] {
+  -khtml-user-drag: element;
+}
+
 section {
   min-height: 225px;
   min-height: 2vh;
 }
 
-section:hover::before {
+.page-lab section:hover::before {
   content: ":↑";
   display: block;
   color: #444;
@@ -12,7 +16,15 @@ section:hover::before {
   position: absolute;
 }
 
-main:not(.re-arranging) > section > div {
+.page-cast section > div {
+  display: grid;
+  grid-template-columns: repeat(13, 1fr);
+  grid-template-rows: minmax(7vw, max-content);
+  grid-row-gap: 1vh;
+  /* align-items: center; */
+  justify-items: center;
+}
+.editing section > div {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: minmax(7vw, max-content);
@@ -84,7 +96,7 @@ h1 {
 }
 h2 {
   font-size: 2.5vw;
-  line-height: 0.2;
+  /* line-height: 0.2; */
 }
 h3 {
   font-size: 1.75vw;
@@ -109,7 +121,7 @@ h4 {
 
 h1,
 h5 {
-  padding-left: 60px;
+  padding-left: 8vw;
 }
 .buttons {
   padding: 3px 0 9px;
@@ -123,21 +135,28 @@ h5 {
   color: #555;
   text-align: right;
 }
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+}
 .buttons li {
   display: inline-block;
-  margin: 0 6px;
+  text-align: center;
+  /* margin: 0 2%; */
+  /* padding: 0 0.2rem; */
 }
 .buttons button:hover {
   text-decoration: underline;
 }
 .status,
-.buttons button,
 .status input,
 .status button,
 a {
   font-size: 0.8rem;
 }
-.buttons button,
+.buttons button {
+  font-size: 67%;
+}
 .status button:not(.btn),
 a {
   background-color: transparent;
@@ -148,11 +167,25 @@ a {
   text-decoration: none;
   padding: 1px 7px 2px;
 }
+.buttons button {
+  background-color: transparent;
+  /* font-size: 16px; */
+  color: #777;
+  border: 0;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 2.5% 7% 5%;
+}
+
 .buttons span {
   cursor: default;
 }
-.buttons button:nth-child(n + 1) {
+.buttons li:nth-child(n + 3) {
   border-left: 1px solid #777;
+}
+.buttons li:nth-child(1) {
+  position: relative;
+  top: 3px;
 }
 
 .remove {
@@ -194,7 +227,8 @@ a {
 
 .page-lab header,
 .page-lab footer,
-.page-lab section {
+.page-lab section,
+ul.ui-tabview-nav li.ui-state-default {
   cursor: pointer;
 }
 .styleForm {
@@ -248,6 +282,9 @@ label > span {
 .page-lab option,
 .page-lab section > * > * {
   cursor: pointer;
+}
+.circle-picker {
+  transform: translateY(-50%);
 }
 .selectColor option {
   width: 1em;
@@ -316,6 +353,10 @@ select:not(.selectColor) option {
   width: 75%;
   margin: auto;
 }
+.editing section > div {
+  width: 85%;
+  margin: auto;
+}
 
 .atoms,
 .molecules,
@@ -371,8 +412,13 @@ select:not(.selectColor) option {
   /* transform: scaleX(-1); */
 }
 
-.ui-tabview-panel > .tile > .box:not(:last-child) {
+.atoms > .box:not(:last-child),
+.organisms > .box:not(:last-child) {
   min-height: 200px;
+}
+
+.molecules > .box:not(:last-child) {
+  min-height: 150px;
 }
 
 .box .child {
@@ -431,7 +477,9 @@ main {
   margin: 24px;
   position: relative;
 }
-
+.art-board .editing div.element {
+  width: 100%;
+}
 .art-board .editing .element,
 .art-board .react-grid-item .content p,
 .page-cast section > div p {
@@ -440,6 +488,10 @@ main {
   margin-right: 0;
   margin-top: 0;
   /* transform: translate(10px, 10px); */
+}
+.art-board .editing p,
+.page-cast p {
+  width: 100%;
 }
 
 /* .art-board .react-grid-item .content {
@@ -470,7 +522,7 @@ main {
 .page > .status {
   display: grid;
   grid-gap: 36px;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(4, auto);
   text-align: center;
 }
 

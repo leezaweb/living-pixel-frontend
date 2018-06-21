@@ -9,6 +9,14 @@ import * as actions from "./actions";
 import { connect } from "react-redux";
 
 class BodyLab extends Component {
+  componentDidUpdate() {
+    if (this.props.activeElement) {
+      let tab = document.querySelector(".ui-tabview-selected");
+      if (tab) {
+        tab.classList.remove("ui-tabview-selected", "ui-state-active");
+      }
+    }
+  }
   render() {
     let { body_style } = this.props.body;
     let style = {};
@@ -82,6 +90,7 @@ class BodyLab extends Component {
 
 const mapStateToProps = state => ({
   editing: state.editing,
+  activeElement: state.activeElement,
   body: state.activeSite.body
 });
 

@@ -48,8 +48,6 @@ class Main extends Component {
 
               if (camelKey === "minHeight") {
                 sectionStyle[camelKey] = value / 12 + "vw";
-              } else if (camelKey.includes("Width")) {
-                sectionStyle[camelKey] = value / 12 + "vw";
               } else {
                 sectionStyle[camelKey] = value;
               }
@@ -82,16 +80,9 @@ class Main extends Component {
                         elementStyle[camelKey] = value + 1;
                       } else if (camelKey === "gridRowEnd") {
                         elementStyle[camelKey] = value + 1;
-                      } else if (
-                        camelKey === "gridColumnStart" &&
-                        value === 0
-                      ) {
+                      } else if (camelKey === "gridColumnStart") {
                         elementStyle[camelKey] = value + 1;
-                      } else if (
-                        camelKey === "gridColumnEnd" &&
-                        value < 12 &&
-                        elementStyle.gridColumnStart === 1
-                      ) {
+                      } else if (camelKey === "gridColumnEnd") {
                         elementStyle[camelKey] = value + 1;
                       } else if (camelKey === "columnGap") {
                         elementStyle[camelKey] = value / 12 + "vw";
