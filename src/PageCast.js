@@ -4,7 +4,7 @@ import BodyCast from "./BodyCast";
 import * as actions from "./actions";
 import { connect } from "react-redux";
 import { ProgressSpinner } from "primereact/components/progressspinner/ProgressSpinner";
-
+import Nav from "./Nav";
 class PageCast extends Component {
   componentDidMount() {
     let id = parseInt(localStorage.getItem("id"), 10) || 1;
@@ -13,8 +13,9 @@ class PageCast extends Component {
   }
   render() {
     return (
-      <div className="page-cast">
-        <div>
+      <div>
+        <Nav />
+        <div className="page-cast">
           <Page>{this.props.loading ? <ProgressSpinner /> : <BodyCast />}</Page>
         </div>
       </div>

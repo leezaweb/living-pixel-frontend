@@ -4,7 +4,7 @@ import TabContainer from "./TabContainer";
 class Panel extends Component {
   render() {
     return (
-      <aside>
+      <aside className="panel">
         <TabContainer />
       </aside>
     );

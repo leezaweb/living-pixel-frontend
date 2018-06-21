@@ -63,95 +63,97 @@ export const dragEnd = e => {
   const thunk = (dispatch, getState) => {
     console.log("end");
     if (e.screenX > 970 || e.target.dataset.type) {
-      this.dragged.style.opacity = "1";
-      let data;
-      if (this.over) {
-        switch (this.dragged.dataset.type) {
-          case "section":
-            data = {
-              id: this.dragged.dataset.id,
-              over: this.over.dataset.id,
-              site: this.dragged.dataset.site,
-              key: this.dragged.dataset.id
-            };
-            // debugger;
+      if (this.dragged) {
+        this.dragged.style.opacity = "1";
+        let data;
+        if (this.over) {
+          switch (this.dragged.dataset.type) {
+            case "section":
+              data = {
+                id: this.dragged.dataset.id,
+                over: this.over.dataset.id,
+                site: this.dragged.dataset.site,
+                key: this.dragged.dataset.id
+              };
+              // debugger;
 
-            fetch(`${SECTION_URL}/${this.dragged.dataset.id}`, {
-              body: JSON.stringify(data),
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json"
-              },
-              method: "PATCH"
-            })
-              .then(resp => console.log(resp))
-              .then(() =>
-                fetch(`${SITE_URL}/${getState().activeSite.id}`)
-                  .then(resp => resp.json())
-                  .then(json => {
-                    dispatch(renderSite(siteWithEditors(json)));
-                  })
-              );
-            break;
-          case "molecule":
-            data = {
-              section: this.over.dataset.id,
-              site: this.dragged.dataset.site,
-              key: this.dragged.dataset.id
-            };
+              fetch(`${SECTION_URL}/${this.dragged.dataset.id}`, {
+                body: JSON.stringify(data),
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json"
+                },
+                method: "PATCH"
+              })
+                .then(resp => console.log(resp))
+                .then(() =>
+                  fetch(`${SITE_URL}/${getState().activeSite.id}`)
+                    .then(resp => resp.json())
+                    .then(json => {
+                      dispatch(renderSite(siteWithEditors(json)));
+                    })
+                );
+              break;
+            case "molecule":
+              data = {
+                section: this.over.dataset.id,
+                site: this.dragged.dataset.site,
+                key: this.dragged.dataset.id
+              };
 
-            fetch(SECTION_URL, {
-              body: JSON.stringify(data),
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json"
-              },
-              method: "POST"
-            })
-              .then(resp => console.log(resp))
-              .then(() =>
-                fetch(`${SITE_URL}/${getState().activeSite.id}`)
-                  .then(resp => resp.json())
-                  .then(json => {
-                    dispatch(renderSite(siteWithEditors(json)));
-                  })
-              );
-            break;
-          case "atom":
-            console.log(this.dragged.dataset);
-            data = {
-              section: this.over.dataset.id,
-              site: this.dragged.dataset.site,
-              key: this.dragged.dataset.id
-            };
+              fetch(SECTION_URL, {
+                body: JSON.stringify(data),
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json"
+                },
+                method: "POST"
+              })
+                .then(resp => console.log(resp))
+                .then(() =>
+                  fetch(`${SITE_URL}/${getState().activeSite.id}`)
+                    .then(resp => resp.json())
+                    .then(json => {
+                      dispatch(renderSite(siteWithEditors(json)));
+                    })
+                );
+              break;
+            case "atom":
+              console.log(this.dragged.dataset);
+              data = {
+                section: this.over.dataset.id,
+                site: this.dragged.dataset.site,
+                key: this.dragged.dataset.id
+              };
 
-            fetch(ELEMENT_URL, {
-              body: JSON.stringify(data),
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json"
-              },
-              method: "POST"
-            })
-              .then(resp => console.log(resp))
-              .then(() =>
-                fetch(`${SITE_URL}/${getState().activeSite.id}`)
-                  .then(resp => resp.json())
-                  .then(json => {
-                    dispatch(renderSite(siteWithEditors(json)));
-                  })
-              );
-            break;
-          default:
+              fetch(ELEMENT_URL, {
+                body: JSON.stringify(data),
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json"
+                },
+                method: "POST"
+              })
+                .then(resp => console.log(resp))
+                .then(() =>
+                  fetch(`${SITE_URL}/${getState().activeSite.id}`)
+                    .then(resp => resp.json())
+                    .then(json => {
+                      dispatch(renderSite(siteWithEditors(json)));
+                    })
+                );
+              break;
+            default:
+          }
+          console.log(
+            `"${this.dragged.dataset.id}" dragged over Section ${
+              this.over.dataset.id
+            }`
+          );
+
+          console.log(this.dragged.dataset.id);
+          console.log(this.over.dataset.id);
         }
-        console.log(
-          `"${this.dragged.dataset.id}" dragged over Section ${
-            this.over.dataset.id
-          }`
-        );
-
-        console.log(this.dragged.dataset.id);
-        console.log(this.over.dataset.id);
       }
     }
   };

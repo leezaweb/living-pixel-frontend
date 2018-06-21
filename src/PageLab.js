@@ -5,20 +5,45 @@ import Panel from "./Panel";
 import { Route, Switch } from "react-router-dom";
 import * as actions from "./actions";
 import { connect } from "react-redux";
+import Nav from "./Nav";
 
 class PageLab extends Component {
+  componentDidMount() {
+    window.onscroll = function() {
+      myFunction();
+    };
+
+    var panel = document.querySelector(".panel");
+
+    var sticky = panel.offsetTop - 250;
+
+    function myFunction() {
+      if (window.pageYOffset >= sticky) {
+        panel.classList.add("sticky");
+      } else {
+        panel.classList.remove("sticky");
+      }
+    }
+  }
   render() {
     return (
-      <div className="page-lab">
-        <Switch>
-          <Route exact path={"/page-lab"}>
-            <ArtBoard />
-          </Route>
-          <Route exact path={"/account"}>
-            <Account />
-          </Route>
-        </Switch>
-        <Panel />
+      <div>
+        <Nav />
+        <div className="page-lab">
+          <Switch>
+            <Route exact path={"/page-lab"}>
+              <div>
+                <ArtBoard />
+              </div>
+            </Route>
+            <Route exact path={"/account"}>
+              <div>
+                <Account />
+              </div>
+            </Route>
+          </Switch>
+          <Panel />
+        </div>
       </div>
     );
   }

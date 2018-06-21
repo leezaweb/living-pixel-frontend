@@ -51,9 +51,8 @@ class ArtBoard extends Component {
               <div>
                 {this.props.editing ? (
                   <span>
-                    Editing "{this.props.activeSite.title}"
-                    {" • "}
                     <button
+                      className="btn"
                       onClick={event =>
                         this.props.updateEditing(
                           event,
@@ -62,15 +61,18 @@ class ArtBoard extends Component {
                         )
                       }
                     >
+                      {" "}
+                      <i
+                        className="fa fa-wrench"
+                        style={{ color: "white" }}
+                      />{" "}
                       Re-arrange
                     </button>
-                    {" • "}
                   </span>
                 ) : (
                   <span>
-                    Re-arranging "{this.props.activeSite.title}"
-                    {" • "}
                     <button
+                      className="btn"
                       onClick={event =>
                         this.props.updateEditing(
                           event,
@@ -79,17 +81,17 @@ class ArtBoard extends Component {
                         )
                       }
                     >
+                      {" "}
+                      <i
+                        className="fa fa-wrench"
+                        style={{ color: "white" }}
+                      />{" "}
                       Edit
                     </button>
-                    {" • "}
                   </span>
                 )}{" "}
               </div>
-              <div>
-                <Link to={"/page-cast"} target="blank">
-                  Preview
-                </Link>
-              </div>
+
               <div>
                 <form onSubmit={this.handleTitleSubmit} action="POST">
                   <label>
@@ -105,6 +107,7 @@ class ArtBoard extends Component {
                 {"    "}
                 <form onSubmit={this.handleURLSubmit} action="POST">
                   <label>
+                    {" "}
                     URL:{" "}
                     <input
                       type="text"
@@ -117,7 +120,8 @@ class ArtBoard extends Component {
               </div>
               <div>
                 <button className="btn" onClick={this.newSite}>
-                  New Site
+                  <i className="fa fa-file" style={{ color: "white" }} /> New
+                  Site
                 </button>
               </div>
             </div>

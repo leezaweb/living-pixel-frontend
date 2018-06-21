@@ -75,9 +75,9 @@ class TabContainer extends Component {
 
     return (
       <TabView onTabChange={() => this.props.selectElement(null)}>
-        <TabPanel header="Organisms" leftIcon="fa-gear">
+        <TabPanel header="Atoms" leftIcon="fa-gear">
           {!this.props.activeElement ? (
-            <div className="organisms tile"> {organisms}</div>
+            <div className="atoms tile"> {atoms}</div>
           ) : (
             propertyPanel()
           )}
@@ -89,10 +89,9 @@ class TabContainer extends Component {
             propertyPanel()
           )}
         </TabPanel>
-
-        <TabPanel header="Atoms" leftIcon="fa-gear">
+        <TabPanel header="Organisms" leftIcon="fa-gear">
           {!this.props.activeElement ? (
-            <div className="atoms tile"> {atoms}</div>
+            <div className="organisms tile"> {organisms}</div>
           ) : (
             propertyPanel()
           )}
