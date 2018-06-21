@@ -3,12 +3,12 @@ section {
   min-height: 2vh;
 }
 
-section::before {
+section:hover::before {
   content: ":↑";
   display: block;
   color: #444;
   font-size: 3rem;
-  right: -4rem;
+  right: 4rem;
   position: absolute;
 }
 
@@ -69,9 +69,12 @@ main:not(.re-arranging) > section > div > *:last-child {
   /* width: 100%;
   height: auto; */
 }
-.page-cast,
 .page-lab .art-board {
   font-size: 1vw;
+  /* line-height: 1.2vw; */
+}
+.page-cast {
+  font-size: 1.25vw;
   /* line-height: 1.2vw; */
 }
 
@@ -84,10 +87,16 @@ h2 {
   line-height: 0.2;
 }
 h3 {
-  font-size: 2vw;
+  font-size: 1.75vw;
 }
 h4 {
   font-size: 1.5vw;
+}
+.page-lab h3 {
+  font-size: 1.375vw;
+}
+.page-lab h4 {
+  font-size: 1.125vw;
 }
 
 h2,
@@ -335,13 +344,19 @@ select:not(.selectColor) option {
 .molecules .box {
   cursor: grab;
 }
+
+/* .organisms .box:nth-child(1) {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAuoAAASUCAYAAAAxnygtAAAKCmlDQ…QQQAABBBBAAAEEEIisAI16ZEvHwBFAAAEEEEAAAQQyWeD/AzQ7TRoYhtiuAAAAAElFTkSuQmCC);
+  background-size: cover;
+} */
+
 .ui-tabview-panel > .tile > .box {
   border-color: #d5d5d5;
   border-style: solid;
   border-width: 1px 1px 0 1px;
-  box-shadow: inset 0 0 2px 0 rgba(255, 255, 255, 0.4),
+  /* box-shadow: inset 0 0 2px 0 rgba(255, 255, 255, 0.4),
     inset 0 0 3px 0 rgba(0, 0, 0, 0.4), inset 0 0 3px 5px rgba(0, 0, 0, 0.05),
-    2px 2px 4px 0 rgba(0, 0, 0, 0.25);
+    2px 2px 4px 0 rgba(0, 0, 0, 0.25); */
   border-radius: 4px;
   position: relative;
   text-align: center;
@@ -423,7 +438,7 @@ main {
   padding: 0 0.25vw;
   margin-left: 0;
   margin-right: 0;
-  margin-bottom: 0;
+  margin-top: 0;
   /* transform: translate(10px, 10px); */
 }
 

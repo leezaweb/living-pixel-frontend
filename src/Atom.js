@@ -15,9 +15,9 @@ class Atom extends Component {
         onDragStart={e => this.props.dragStart(e)}
       >
         <span className="child">
-          <i className="fa fa-object-ungroup" />
+          {/*  <i className="fa fa-object-ungroup" />
           <br />
-          {this.props.title}
+          {this.props.title}*/}
         </span>
       </div>
     );

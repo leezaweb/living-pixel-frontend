@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import BodyLab from "./BodyLab";
 import Page from "./Page";
-import Menu from "./Menu";
 import { Link } from "react-router-dom";
 import * as actions from "./actions";
 import { connect } from "react-redux";
@@ -9,9 +8,9 @@ import { ProgressSpinner } from "primereact/components/progressspinner/ProgressS
 
 class ArtBoard extends Component {
   componentDidMount() {
-    let id = parseInt(localStorage.getItem("id")) || 1;
+    let id = parseInt(localStorage.getItem("id"), 10) || 1;
     window.localStorage.setItem("id", JSON.stringify(id));
-    this.props.fetchSite({ id: parseInt(localStorage.getItem("id")) });
+    this.props.fetchSite({ id: parseInt(localStorage.getItem("id"), 10) });
   }
 
   handleURLSubmit = event => {
@@ -37,6 +36,7 @@ class ArtBoard extends Component {
 
   render() {
     if (this.props.activeSite.id) {
+      // debugger;
       let id = this.props.activeSite.id;
       localStorage.setItem("id", JSON.stringify(id));
     }

@@ -18,9 +18,9 @@ class Organism extends Component {
         }
       >
         <span className="child">
-          <i className="fa fa-object-ungroup" />
+          {/*  <i className="fa fa-object-ungroup" />
           <br />
-          {this.props.title}
+          {this.props.title}*/}
         </span>
       </div>
     );

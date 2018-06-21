@@ -1,5 +1,4 @@
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
-import store from "./store";
 
 const SECTION_URL = "http://localhost:3000/api/v1/sections";
 const PUBLISHED_URL = "http://localhost:3000/api/v1/published-sites";
@@ -19,7 +18,8 @@ const siteUpdater = (object, dispatch, getState) => {
     title: object.title,
     id: getState().activeSite.id
   };
-  fetch(`${SITE_URL}/${object.id}`, {
+  console.log(data, getState().activeSite.id);
+  fetch(`${SITE_URL}/${data.id}`, {
     body: JSON.stringify(data),
     headers: {
       Accept: "application/json",
@@ -29,7 +29,7 @@ const siteUpdater = (object, dispatch, getState) => {
   })
     .then(resp => console.log(resp))
     .then(() =>
-      fetch(`${SITE_URL}/${object.id}`)
+      fetch(`${SITE_URL}/${data.id}`)
         .then(resp => {
           return resp.json();
         })
@@ -313,7 +313,8 @@ export const cloneOrganism = object => {
 
 const organismCloner = (object, dispatch, getState) => {
   let data = {
-    key: object.key
+    key: object.key,
+    site: getState().activeSite.id
   };
   console.log("gonna clone template");
 
@@ -389,13 +390,6 @@ export const updateElement = object => {
 
 export const updateElementGrid = object => {
   const thunk = (dispatch, getState) => {
-    if ("editorState" in object) {
-      dispatch({
-        type: "UPDATE_ELEMENT",
-        payload: { editorState: object.editorState, element: object.element }
-      });
-    }
-
     elementGridUpdator(object, dispatch, getState);
   };
 
@@ -594,10 +588,16 @@ export function selectElement(element) {
 }
 
 export function updateEditing(event, element, editing) {
-  return {
-    type: "UPDATE_EDITING",
-    editing
+  const thunk = (dispatch, getState) => {
+    dispatch({
+      type: "UPDATE_EDITING",
+      editing
+    });
+    let object = { id: getState().activeSite.id };
+    siteFetcher(object, dispatch, getState);
   };
+
+  return thunk;
 }
 
 const siteWithEditors = json => {

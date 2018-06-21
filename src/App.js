@@ -3,6 +3,8 @@ import PageCast from "./PageCast";
 import PageLab from "./PageLab";
 import PixelPage from "./PixelPage";
 import "./App.css";
+import "./Organisms.css";
+import "./Atoms.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/omega/theme.css";
 import "font-awesome/css/font-awesome.css";

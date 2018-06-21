@@ -67,6 +67,7 @@ class MainReArrange extends Component {
   }
 
   componentDidMount() {
+    console.log("mount");
     let sections = [...document.querySelectorAll("section")];
 
     sections.forEach(section => {
@@ -83,16 +84,17 @@ class MainReArrange extends Component {
     images.forEach(image => {
       // debugger;
       if (image.naturalWidth > image.naturalHeight) {
-        image.style.width = "100%";
+        image.style.width = "90%";
         image.style.height = "auto";
       } else {
-        image.style.height = "100%";
+        image.style.height = "50%";
         image.style.width = "auto";
       }
     });
   }
 
   componentDidUpdate() {
+    console.log("update");
     let sections = [...document.querySelectorAll("section")];
 
     sections.forEach(section => {

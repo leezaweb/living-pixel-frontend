@@ -7,9 +7,9 @@ import { ProgressSpinner } from "primereact/components/progressspinner/ProgressS
 
 class PageCast extends Component {
   componentDidMount() {
-    let id = parseInt(localStorage.getItem("id")) || 1;
+    let id = parseInt(localStorage.getItem("id"), 10) || 1;
     window.localStorage.setItem("id", JSON.stringify(id));
-    this.props.fetchSite({ id: parseInt(localStorage.getItem("id")) });
+    this.props.fetchSite({ id: parseInt(localStorage.getItem("id"), 10) });
   }
   render() {
     return (
