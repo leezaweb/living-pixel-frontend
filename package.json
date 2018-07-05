@@ -11,6 +11,7 @@
     "lodash": "^4.17.10",
     "primereact": "^1.6.0-rc.1",
     "react": "^16.4.0",
+    "react-addons-css-transition-group": "^15.6.2",
     "react-color": "^2.14.1",
     "react-cropper": "^1.0.1",
     "react-css-grid": "^2.0.0-0",

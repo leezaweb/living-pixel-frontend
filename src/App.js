@@ -14,7 +14,7 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import { connect } from "react-redux";
 import * as actions from "./actions";
-// import NewComponent from "./NewComponent";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 class App extends Component {
   render() {
@@ -22,12 +22,28 @@ class App extends Component {
       <Router>
         <Switch>
           <Route exact path={"/(page-lab|account)"}>
-            <PageLab />
+            <ReactCSSTransitionGroup
+              transitionName="fade"
+              transitionEnterTimeout={1000}
+              transitionLeaveTimeout={1000}
+              transitionAppear={true}
+              transitionAppearTimeout={1000}
+            >
+              <PageLab />
+            </ReactCSSTransitionGroup>
           </Route>
           <Route exact path="/sites/:url" component={PixelPage} />
 
           <Route exact path="/page-cast">
-            <PageCast />
+            <ReactCSSTransitionGroup
+              transitionName="fade"
+              transitionEnterTimeout={1000}
+              transitionLeaveTimeout={1000}
+              transitionAppear={true}
+              transitionAppearTimeout={1000}
+            >
+              <PageCast />
+            </ReactCSSTransitionGroup>
           </Route>
         </Switch>
       </Router>

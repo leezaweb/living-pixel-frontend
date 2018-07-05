@@ -105,7 +105,7 @@ class Style extends Component {
                   type="number"
                   defaultValue={this.props.activeElement[key][k[0]]}
                   name={k[0]}
-                  onChange={event => {
+                  onMouseDown={event => {
                     event.persist();
                     this.handleChange(
                       key,
@@ -126,7 +126,7 @@ class Style extends Component {
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
                     className="selectColor"
-                    onChange={event => {
+                    onMouseDown={event => {
                       event.persist();
                       this.handleChange(
                         key,
@@ -161,7 +161,7 @@ class Style extends Component {
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
                     className="selectBorder"
-                    onChange={event => {
+                    onMouseDown={event => {
                       event.persist();
                       this.handleChange(
                         key,
@@ -204,7 +204,7 @@ class Style extends Component {
                     type="file"
                     name={k[0]}
                     ref={ref => (this.fileUpload = ref)}
-                    onChange={event => {
+                    onMouseDown={event => {
                       event.persist();
                       this.handleChange(
                         key,
@@ -236,7 +236,7 @@ class Style extends Component {
                     onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
-                    onChange={event => {
+                    onMouseDown={event => {
                       event.persist();
                       this.handleChange(
                         key,
@@ -275,7 +275,7 @@ class Style extends Component {
                     onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
-                    onChange={event => {
+                    onMouseDown={event => {
                       event.persist();
                       this.handleChange(
                         key,
@@ -308,7 +308,7 @@ class Style extends Component {
                     onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
-                    onChange={event => {
+                    onMouseDown={event => {
                       event.persist();
                       this.handleChange(
                         key,
@@ -344,7 +344,7 @@ class Style extends Component {
                     onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
-                    onChange={event => {
+                    onMouseDown={event => {
                       event.persist();
                       this.handleChange(
                         key,
@@ -379,7 +379,7 @@ class Style extends Component {
                     onMouseOver={this.handleHover}
                     defaultValue={[this.props.activeElement[key][k[0]]]}
                     name={k[0]}
-                    onChange={event => {
+                    onMouseDown={event => {
                       event.persist();
                       this.handleChange(
                         key,
@@ -420,7 +420,7 @@ class Style extends Component {
                     size="3"
                     defaultValue={this.props.activeElement[key][k[0]]}
                     name={k[0]}
-                    onChange={event => {
+                    onMouseDown={event => {
                       event.persist();
                       this.handleChange(
                         key,

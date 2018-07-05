@@ -15,7 +15,7 @@ class PixelPage extends Component {
 
   render() {
     return (
-      <div className="page-cast">
+      <div className="page-cast published">
         <div>
           <Page>{this.props.loading ? <ProgressSpinner /> : <BodyCast />}</Page>
         </div>
