@@ -1,9 +1,10 @@
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
-
-const SECTION_URL = "http://living-pixel-backend.herokuapp.com/api/v1/sections";
-const PUBLISHED_URL = "http://living-pixel-backend.herokuapp.com/api/v1/published-sites";
-const ELEMENT_URL = `http://living-pixel-backend.herokuapp.com/api/v1/elements`;
-const SITE_URL = `http://living-pixel-backend.herokuapp.com/api/v1/sites`;
+// const BASE_URL = "http://living-pixel-backend.herokuapp.com";
+const BASE_URL = "http://localhost:3000";
+const SECTION_URL = `${BASE_URL}/api/v1/sections`;
+const PUBLISHED_URL = `${BASE_URL}/api/v1/published-sites`;
+const ELEMENT_URL = `${BASE_URL}/api/v1/elements`;
+const SITE_URL = `${BASE_URL}/api/v1/sites`;
 
 export const updateSite = object => {
   const thunk = (dispatch, getState) => {
@@ -474,10 +475,7 @@ const elementUpdator = (object, dispatch, getState) => {
 };
 
 const fetchToElementText = (object, data, id, dispatch, getState) => {
-  const ELEMENT_URL = `http://living-pixel-backend.herokuapp.com/api/v1/${object.key.replace(
-    "_style",
-    ""
-  )}s`;
+  const ELEMENT_URL = `${BASE_URL}/api/v1/${object.key.replace("_style", "")}s`;
   fetch(`${ELEMENT_URL}/${id}`, {
     body: JSON.stringify(data),
     headers: {
@@ -489,10 +487,7 @@ const fetchToElementText = (object, data, id, dispatch, getState) => {
 };
 
 const fetchToElement = (object, data, id, dispatch, getState) => {
-  const ELEMENT_URL = `http://living-pixel-backend.herokuapp.com/api/v1/${object.key.replace(
-    "_style",
-    ""
-  )}s`;
+  const ELEMENT_URL = `${BASE_URL}/api/v1/${object.key.replace("_style", "")}s`;
   fetch(`${ELEMENT_URL}/${id}`, {
     body: JSON.stringify(data),
     headers: {
@@ -515,7 +510,7 @@ const fetchToElement = (object, data, id, dispatch, getState) => {
 };
 
 const fetchToStyleGrid = (object, data, id, dispatch, getState) => {
-  const ELEMENT_STYLE_URL = `http://living-pixel-backend.herokuapp.com/api/v1/${object.key}s`;
+  const ELEMENT_STYLE_URL = `${BASE_URL}/api/v1/${object.key}s`;
 
   fetch(`${ELEMENT_STYLE_URL}/${id}`, {
     body: JSON.stringify(data),
@@ -540,7 +535,7 @@ const fetchToStyleGrid = (object, data, id, dispatch, getState) => {
 };
 
 const fetchToStyle = (object, data, id, dispatch, getState) => {
-  const ELEMENT_STYLE_URL = `http://living-pixel-backend.herokuapp.com/api/v1/${object.key}s`;
+  const ELEMENT_STYLE_URL = `${BASE_URL}/api/v1/${object.key}s`;
 
   fetch(`${ELEMENT_STYLE_URL}/${id}`, {
     body: JSON.stringify(data),
@@ -572,7 +567,7 @@ export const deleteElement = object => {
 };
 
 const elementDeleter = (object, dispatch, getState) => {
-  const ELEMENT_URL = `http://living-pixel-backend.herokuapp.com/api/v1/elements`;
+  const ELEMENT_URL = `${BASE_URL}/api/v1/elements`;
 
   let id = object.element.id;
 
