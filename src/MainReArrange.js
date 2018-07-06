@@ -199,7 +199,7 @@ class MainReArrange extends Component {
                     onLayoutChange={this.onLayoutChange}
                     layout={layout}
                     cols={12}
-                    width={875}
+                    width={850}
                     data-id={section.id}
                     className={`section-${section.id}`}
                   >
