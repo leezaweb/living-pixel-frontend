@@ -31,7 +31,7 @@ class PageLab extends Component {
         <Nav />
         <div className="page-lab">
           <Switch>
-            <Route exact path={"/page-lab"}>
+            <Route exact path={"/(page-lab|defaultsite)"}>
               <div>
                 <ArtBoard />
               </div>
