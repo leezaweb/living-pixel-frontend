@@ -32,7 +32,7 @@ class App extends Component {
               <PageLab />
             </ReactCSSTransitionGroup>
           </Route>
-          <Route exact path={"/page-lab"}>
+          <Route exact path={"/(page-lab|defaultsite)"}>
             <ReactCSSTransitionGroup
               transitionName="fade"
               transitionEnterTimeout={1000}
