@@ -21,7 +21,7 @@ class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route exact path={"/(page-lab|account)"}>
+          <Route exact path={"/(page-lab|account| )"}>
             <ReactCSSTransitionGroup
               transitionName="fade"
               transitionEnterTimeout={1000}
