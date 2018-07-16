@@ -1,6 +1,6 @@
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
-const BASE_URL = "http://living-pixel-backend.herokuapp.com";
-// const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "http://living-pixel-backend.herokuapp.com";
+const BASE_URL = "http://localhost:3000";
 const SECTION_URL = `${BASE_URL}/api/v1/sections`;
 const PUBLISHED_URL = `${BASE_URL}/api/v1/published-sites`;
 const ELEMENT_URL = `${BASE_URL}/api/v1/elements`;
