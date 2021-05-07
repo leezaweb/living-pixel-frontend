@@ -8,7 +8,7 @@
     "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.4",
     "font-awesome": "^4.7.0",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.21",
     "primereact": "^1.6.0-rc.1",
     "react": "^16.4.0",
     "react-addons-css-transition-group": "^15.6.2",
